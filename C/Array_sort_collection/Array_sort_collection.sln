@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Array_sort_collection", "Array_sort_collection\Array_sort_collection.vcxproj", "{473CB9C6-265C-402F-844C-601F35C528E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Debug|x64.ActiveCfg = Debug|x64
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Debug|x64.Build.0 = Debug|x64
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Debug|x86.ActiveCfg = Debug|Win32
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Debug|x86.Build.0 = Debug|Win32
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Release|x64.ActiveCfg = Release|x64
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Release|x64.Build.0 = Release|x64
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Release|x86.ActiveCfg = Release|Win32
+		{473CB9C6-265C-402F-844C-601F35C528E7}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://buildworld.net:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Array_sort_collection\\Array_sort_collection.vcxproj
+		SccProjectName1 = Array_sort_collection
+		SccLocalPath1 = Array_sort_collection
+	EndGlobalSection
+EndGlobal
