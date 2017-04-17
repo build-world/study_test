@@ -240,3 +240,10 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# JavaWeb files
+.classpath
+.project
+.settings/
+bin/
+*.class
