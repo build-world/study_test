@@ -38,9 +38,9 @@ void Quick_sort_2(Number *array, BitNum n)//Fyf
 	BitNum i = 0, j = n - 1;
 	while (i < j)
 	{
-		while (i < j && array[j] >= pivot) j--;//"="is nessesary
+		while (i < j && array[j] >= pivot) j--;//"="is nessesary,if i =1 to n,count(array[i]==pivot) > 1
 		if (i < j) array[i] = array[j];
-		while (i < j && array[i] <= pivot) i++;//"="is nessesary
+		while (i < j && array[i] <= pivot) i++;//"="is nessesary,if i =1 to n,count(array[i]==pivot) > 1
 		if (i < j) array[j] = array[i];
 	}
 	array[i] = pivot;
