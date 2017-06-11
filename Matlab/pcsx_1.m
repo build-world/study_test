@@ -29,11 +29,11 @@ V_1 = Q*A'*K;
 Lad_1 = L + V_1;
 Had_1 = [HA + Lad_1(1);HA + Lad_1(5);HA + Lad_1(3)];
 
-MidErr0_1 = sqrt(V_1'*P*V_1/r);
+StdErr0_1 = sqrt(V_1'*P*V_1/r);
 QLL_1 = Q - Q*A'*inv(NAA)*A*Q;
-MidErri_1 = zeros(szL(2),1);
+StdErri_1 = zeros(szL(2),1);
 for i = 1:szL(1)
-    MidErri_1(i,1) = MidErr0_1*sqrt(QLL_1(i,i));
+    StdErri_1(i,1) = StdErr0_1*sqrt(QLL_1(i,i));
 end
 
 %Adjustment with Indirect Observations
@@ -48,10 +48,17 @@ V_2 = B*x-l;
 Lad_2 = L + V_2;
 Had_2 = [HA + Lad_2(1);HA + Lad_2(5);HA + Lad_2(3)];
 
-MidErr0_2 = sqrt(V_2'*P*V_2/r);
+StdErr0_2 = sqrt(V_2'*P*V_2/r);
 QXX = inv(NBB);
 QLL_2 = B*QXX*B';
-MidErri_2 = zeros(szL(2),1);
+StdErri_2 = zeros(szL(2),1);
 for i = 1:szL(1)
-    MidErri_2(i,1) = MidErr0_2*sqrt(QLL_2(i,i));
+    StdErri_2(i,1) = StdErr0_2*sqrt(QLL_2(i,i));
 end
+
+%for question
+Qh5h5 = QLL_2(5,5);
+StdErr_h5 = StdErri_2(5,1);
+f = [-1 0 1];
+QFF = f*QXX*f';
+StdErrF = StdErr0_2*sqrt(QFF);
