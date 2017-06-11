@@ -1,4 +1,6 @@
-%Start Data
+%Copyright 2017 Fan Yifeng. All rights reserved.
+
+%Original Data
 HA = 10;
 HB = 12;
 L = [2.359;-0.363;3.009;-1.012;8.23;-6.23;5.878;-5.211];

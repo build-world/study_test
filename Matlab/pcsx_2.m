@@ -1,3 +1,5 @@
+%Copyright 2017 Fan Yifeng. All rights reserved.
+
 %rho def
 rho = 206265;
 %original data
@@ -10,8 +12,8 @@ alpha_CD = dms2degrees([324 46 03]);
 L = [204.952;200.130;345.153;dms2degrees([230 32 37]);dms2degrees([180 00 42]);dms2degrees([170 39 22]);dms2degrees([236 48 37])];
 %????
 Alpha = [alpha_AB - 180 + L(4);alpha_AB - 360 + L(4) + L(5);alpha_AB - 540 + L(4) + L(5) + L(6);alpha_AB - 720 + L(4) + L(5) + L(6) + L(7)];
-COS = zeros(3,0);
-SIN = zeros(3,0);
+COS = zeros(3,1);
+SIN = zeros(3,1);
 for i = 1:3
     COS(i,1) = cosd(Alpha(i,1));
     SIN(i,1) = sind(Alpha(i,1));
@@ -34,6 +36,10 @@ for i = 1:4
     A(2,i + 3) = -1000/rho*(y_C - Y(i,1));
     A(3,i + 3) = 1000/rho*(x_C - X(i,1));
 end
+%debug
+A(2,7) = 0;
+A(3,7) = 0;
+
 %power matrix def
 P = zeros(7);
 for i = 1:3
@@ -52,8 +58,8 @@ V = Q*A'*K;
 Lad = L + V;
 %
 Alphaad = [alpha_AB - 180 + Lad(4);alpha_AB - 360 + Lad(4) + Lad(5);alpha_AB - 540 + Lad(4) + Lad(5) + Lad(6);alpha_AB - 720 + Lad(4) + Lad(5) + Lad(6) + Lad(7)];
-COSad = zeros(3,0);
-SINad = zeros(3,0);
+COSad = zeros(3,1);
+SINad = zeros(3,1);
 for i = 1:3
     COSad(i,1) = cosd(Alphaad(i,1));
     SINad(i,1) = sind(Alphaad(i,1));
