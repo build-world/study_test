@@ -10,8 +10,8 @@ szS = size(S);
 r = 5;
 
 %power def
-C = 2;
-%C = 4;
+%C = 2;
+C = 4;
 %create power matrix
 P = zeros(szS(2));
 for i = 1:szS(2)
@@ -21,7 +21,7 @@ Q = inv(P);
 
 %Adjustment with Conditions
 A = [1 0 0 0 -1 0 1 0;0 -1 0 0 0 1 1 0;0 0 -1 0 1 0 0 1;0 0 0 1 0 -1 0 1;0 0 0 0 1 1 0 0];
-A0 = [0;0;0;0;-2];
+A0 = [0;0;0;0;HA - HB];
 W_1 = A*L+A0;
 NAA = A*Q*A';
 K = -inv(NAA)*W_1;
@@ -38,8 +38,8 @@ end
 
 %Adjustment with Indirect Observations
 B = [1 0 0;-1 0 0;0 0 1;0 0 -1;0 1 0;0 -1 0;-1 1 0;0 -1 1];
-l = [0;-0.004;0;-0.003;0;0;0.007;0.01];
-X0 = [HA + L(1);HA + L(5);HA + L(3)];
+l = [0;-(-HA + HB - L(1) - L(2));0;-(- HA + HB - L(3) - L(4));0;-(-HA + HB - L(5) - L(6));-(-L(1) + L(5) - L(7));-(L(3) - L(5) - L(8))];
+X0 = [(HA + L(1));(HA + L(5));(HA + L(3))];
 NBB = B'*P*B;
 W_2 = B'*P*l;
 x = inv(NBB)*W_2;

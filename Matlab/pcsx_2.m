@@ -53,6 +53,14 @@ Q = inv(P);
 NAA = A*Q*A';
 K = -inv(NAA)*W;
 V = Q*A'*K;
+msV = V;
+for i = 1:7
+    if(i < 4)
+        msV(i,1) = 1000*msV(i,1);
+    else
+        msV(i,1) = 3600*msV(i,1);
+    end
+end
 Lad = L + V;
 %adjusted values calc
 Alphaad = [alpha_AB - 180 + Lad(4,1);alpha_AB - 360 + Lad(4,1) + Lad(5,1);alpha_AB - 540 + Lad(4,1) + Lad(5,1) + Lad(6,1);alpha_AB - 720 + Lad(4,1) + Lad(5,1) + Lad(6,1) + Lad(7,1)];
