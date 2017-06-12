@@ -1,7 +1,8 @@
 %Copyright 2017 Fan Yifeng. All rights reserved.
 
+%?????????
 %rho def
-rho = 206265;
+rho = 180/pi;
 %original data
 r = 3;
 x_B = 20.348;
@@ -34,8 +35,8 @@ for i = 1:3
     A(3,i) = SIN(i,1);
 end
 for i = 1:4
-    A(2,i + 3) = -1000/rho*(y_C - Y(i,1));
-    A(3,i + 3) = 1000/rho*(x_C - X(i,1));
+    A(2,i + 3) = -1/rho*(Y(4,1) - Y(i,1));
+    A(3,i + 3) = 1/rho*(X(4,1) - X(i,1));
 end
 %W
 W = [Alpha(4,1) - alpha_CD;X(4,1) - x_C;Y(4,1) - y_C];
