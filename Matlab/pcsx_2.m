@@ -88,3 +88,8 @@ end
 %for question
 StdErrS2 = StdErri(2,1);
 StdErrB2 = StdErri(5,1);
+fx = [COSad(1,1) 0 0 -SINad(1,1)*Lad(1,1) 0 0 0];
+fy = [SINad(1,1) 0 0 COSad(1,1)*Lad(1,1) 0 0 0];
+Qxx = fx*QLL*fx';
+Qyy = fy*QLL*fy';
+StdErrP2 = StdErr0*sqrt(Qxx + Qyy);
