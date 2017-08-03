@@ -241,6 +241,10 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
+################################
+#custom
+################################
+
 # JavaWeb files
 .classpath
 .project
@@ -250,3 +254,6 @@ bin/
 
 #Matlab
 *.asv
+
+#Python
+*.pyc
