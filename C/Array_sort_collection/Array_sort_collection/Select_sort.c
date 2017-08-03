@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void Select_sort_1(Number *array, BitNum n)//Fyf ¼òµ¥Ñ¡ÔñÅÅĞò
+void Select_sort_1(Number *array, BitNum n)//Fyf ç®€å•é€‰æ‹©æ’åº
 {
 	Number temp;
-	BitNum i, j;//iÖ¸ÏòÓĞĞòÇø×î½Ó½üÎŞĞòÇøµÄÔªËØ,j±éÀúÎŞĞòÇøÑ°ÕÒÖµ×îĞ¡½»»»¶ÔÏó
+	BitNum i, j;//iæŒ‡å‘æœ‰åºåŒºæœ€æ¥è¿‘æ— åºåŒºçš„å…ƒç´ ,jéå†æ— åºåŒºå¯»æ‰¾å€¼æœ€å°äº¤æ¢å¯¹è±¡
 	for (i = 0; i < n - 1; i++)
 	{
 		for (j = i + 1; j < n; j++)
@@ -25,7 +25,7 @@ void Select_sort_1(Number *array, BitNum n)//Fyf ¼òµ¥Ñ¡ÔñÅÅĞò
 void Select_sort_2(Number *array, BitNum n)//Fyf
 {
 	Number minimum, temp;
-	BitNum cursor, i, objptr = 0;//cursorÖ¸ÏòÓĞĞòÇø×î½Ó½üÎŞĞòÇøµÄÔªËØ,i±éÀúÎŞĞòÇøÑ°ÕÒÖµ×îĞ¡½»»»¶ÔÏó,objptrÖ¸Ïò½»»»¶ÔÏóÔªËØÇÒĞè³õÊ¼»¯
+	BitNum cursor, i, objptr = 0;//cursoræŒ‡å‘æœ‰åºåŒºæœ€æ¥è¿‘æ— åºåŒºçš„å…ƒç´ ,iéå†æ— åºåŒºå¯»æ‰¾å€¼æœ€å°äº¤æ¢å¯¹è±¡,objptræŒ‡å‘äº¤æ¢å¯¹è±¡å…ƒç´ ä¸”éœ€åˆå§‹åŒ–
 	for (cursor = 0; cursor < n - 1; cursor++)
 	{
 		minimum = array[cursor];

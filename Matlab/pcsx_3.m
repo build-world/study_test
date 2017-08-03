@@ -30,8 +30,8 @@ for i = 1:szL(1)
 end
 %approximate values calc
 X0 = [
-(x_B*cotd(L(5,1)) + x_C*cotd(L(4,1)) - (y_C - y_B))/(cotd(L(4,1)) + cotd(L(5,1)));
-(y_B*cotd(L(5,1)) + y_C*cotd(L(4,1)) + (x_C - x_B))/(cotd(L(4,1)) + cotd(L(5,1)));
+((x_B*cotd(L(5,1)) + x_C*cotd(L(4,1)) - (y_C - y_B))/(cotd(L(4,1)) + cotd(L(5,1))) + (x_A*cotd(L(2,1)) + x_B*cotd(L(1,1)) - (y_B - y_A))/(cotd(L(1,1)) + cotd(L(2,1))))/2;
+((y_B*cotd(L(5,1)) + y_C*cotd(L(4,1)) + (x_C - x_B))/(cotd(L(4,1)) + cotd(L(5,1))) + (y_A*cotd(L(2,1)) + y_B*cotd(L(1,1)) + (x_B - x_A))/(cotd(L(1,1)) + cotd(L(2,1))))/2;
 x_D + L(14,1)*cosd(360 - L(9,1) + alpha_DE);
 y_D + L(14,1)*sind(360 - L(9,1) + alpha_DE);
 ];
@@ -43,7 +43,6 @@ sqrt((X0(1,1)- x_C)^2 + (X0(2,1)- y_C)^2);
 sqrt((X0(1,1)- X0(3,1))^2 + (X0(2,1)- X0(4,1))^2);
 sqrt((X0(3,1) - x_D)^2 + (X0(4,1) - y_D)^2);
 ];
-alpha0 = [];
 %B matrix calc
 B = [
 (rho*(X0(2,1) - y_A)/(L0(10,1)^2)) (-rho*(X0(1,1) - x_A)/(L0(10,1)^2)) 0 0;
@@ -62,6 +61,7 @@ B = [
 (X0(1,1) - X0(3,1))/L0(13,1) (X0(2,1) - X0(4,1))/L0(13,1) -(X0(1,1) - X0(3,1))/L0(13,1) -(X0(2,1) - X0(4,1))/L0(13,1);
 0 0 (X0(3,1) - x_D)/L0(14,1) (X0(4,1) - y_D)/L0(14,1);
 ];
+B=[-0.541 0.773 0 0;1.323 -0.288 0 0;-0.782 -0.485 0 0;-1.323 0.288 0 0;0.313 0.591 0 0;1.01 -0.879 0 0;1.669 0.819 -1.356 -0.128;-1.356 -0.228 3.099 1.296;0 0 -1.743 -1.068;0.819 0.574 0 0;0.212 0.977 0 0;-0.884 0.468 0 0;0.166 -0.986 -0.166 0.986;0 0 0.552 -0.853];
 %l matrix calc
 l = [
 (atand((X0(2,1) - y_A)/(X0(1,1) - x_A)) - alpha_AB - L(1,1) + 360);
@@ -79,6 +79,7 @@ l = [
 (L(13,1) - L0(13,1));
 (L(14,1) - L0(14,1));
 ];
+l = [-2.62;1.38;-3.66;1.42;1.76;-6.48;17.72;-0.46;0;5.365;2.576;-1.004;8.364;-0.046];
 %adjust
 NBB = B'*P*B;
 W = B'*P*l;
@@ -90,4 +91,15 @@ Lad = L + V;
 %error
 StdErr0 = sqrt(V'*P*V/r);
 QLL = B*QXX*B';
+StdErrX =zeros(4,1);
+for i = 1:4
+    StdErrX(i,1) = StdErr0*sqrt(QXX(i,i));
+end
+StdErrP1 = sqrt(StdErrX(1,1)^2 + StdErrX(2,1)^2);
+StdErrP2 = sqrt(StdErrX(3,1)^2 + StdErrX(4,1)^2);
+StdErrL = zeros(14,1);
+for i = 1:14
+    StdErrL(i,1) = StdErr0*sqrt(QLL(i,i));
+end
+
 
