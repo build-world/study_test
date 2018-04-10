@@ -231,13 +231,13 @@ BOOL CALLBACK ProcDigProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 					to_x = 100;
 					to_y = 100;
 					*/
-					PAINTSTRUCT ps;
 					HDC hdc = GetDC(hDlg);
-					//SelectObject(hdc, hPen);
+					HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 255));
+					SelectObject(hdc, hPen);
 					MoveToEx(hdc, from_x, from_y, NULL);
 					LineTo(hdc, to_x, to_y);
-					EndPaint(hDlg, &ps);
 					ReleaseDC(hDlg, hdc);
+					DeleteObject(hPen);
 					//PostMessage(hDlg, WM_PAINT, 0, 233);
 				}
 				break;
