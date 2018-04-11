@@ -5,13 +5,15 @@
 #include "Training.h"
 
 #define MAX_LOADSTRING 100
+//
+#define PI 3.1415926
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 //custom def
-int from_x = 0, from_y = 0, to_x = 0, to_y = 0;
+//int from_x = 0, from_y = 0, to_x = 0, to_y = 0;
 
 
 // Forward declarations of functions included in this code module:
@@ -21,6 +23,12 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 //custom def
 BOOL CALLBACK ProcDigProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+namespace mydef
+{
+void DrawLine(HWND hWnd, int iStyle, int cWidth, COLORREF color, int x0, int y0, int x1, int y1);
+void DrawTriangle(HWND hWnd, int iStyle, int cWidth, COLORREF colorint, int x0, int y0, int x1, int y1, int x2, int y2);
+void DrawCircle(HWND hWnd, int iStyle, int cWidth, COLORREF color, int x, int y, int r, int TotalSample);
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -216,29 +224,82 @@ BOOL CALLBACK ProcDigProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 			case IDC_BUTTON1:
 				{
-				
+					SetDlgItemText(hDlg, IDC_EDIT1, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT2, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT3, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT4, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT5, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT6, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT7, TEXT(""));
 				}
 				break;
 			case IDC_BUTTON2:
 				{
+					/*
 					from_x = (int)GetDlgItemInt(hDlg, IDC_EDIT1, NULL, TRUE);
 					from_y = (int)GetDlgItemInt(hDlg, IDC_EDIT2, NULL, TRUE);
 					to_x = (int)GetDlgItemInt(hDlg, IDC_EDIT3, NULL, TRUE);
 					to_y = (int)GetDlgItemInt(hDlg, IDC_EDIT4, NULL, TRUE);
-					/*
+					
 					from_x = 0;
 					from_y = 0;
 					to_x = 100;
 					to_y = 100;
-					*/
+					
 					HDC hdc = GetDC(hDlg);
 					HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 255));
 					SelectObject(hdc, hPen);
 					MoveToEx(hdc, from_x, from_y, NULL);
 					LineTo(hdc, to_x, to_y);
-					ReleaseDC(hDlg, hdc);
 					DeleteObject(hPen);
+					ReleaseDC(hDlg, hdc);
 					//PostMessage(hDlg, WM_PAINT, 0, 233);
+					*/
+					mydef::DrawLine(hDlg, PS_SOLID, 2,
+						RGB(GetDlgItemInt(hDlg, IDC_EDIT5, NULL, FALSE),
+							GetDlgItemInt(hDlg, IDC_EDIT6, NULL, FALSE),
+							GetDlgItemInt(hDlg, IDC_EDIT7, NULL, FALSE)),
+						GetDlgItemInt(hDlg, IDC_EDIT1, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT2, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT3, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT4, NULL, TRUE));
+				}
+				break;
+			case IDC_BUTTON3:
+				{
+					mydef::DrawTriangle(hDlg, PS_SOLID, 2,
+						RGB(GetDlgItemInt(hDlg, IDC_EDIT14, NULL, FALSE),
+							GetDlgItemInt(hDlg, IDC_EDIT15, NULL, FALSE),
+							GetDlgItemInt(hDlg, IDC_EDIT16, NULL, FALSE)),
+						GetDlgItemInt(hDlg, IDC_EDIT8, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT9, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT10, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT11, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT12, NULL, TRUE),
+						GetDlgItemInt(hDlg, IDC_EDIT13, NULL, TRUE));
+				}
+				break;
+			case IDC_BUTTON4:
+				{
+					SetDlgItemText(hDlg, IDC_EDIT8, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT9, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT10, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT11, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT12, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT13, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT14, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT15, TEXT(""));
+					SetDlgItemText(hDlg, IDC_EDIT16, TEXT(""));
+				}
+				break;
+			case IDC_BUTTON5:
+				{
+					InvalidateRect(hDlg, NULL, TRUE);
+				}
+				break;
+			case IDC_BUTTON6:
+				{
+					mydef::DrawCircle(hDlg, PS_SOLID, 1, RGB(0, 255, 255), 400, 400, 100, 1024);
 				}
 				break;
 			}
@@ -257,7 +318,10 @@ BOOL CALLBACK ProcDigProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_CLOSE:
-		PostMessage(hDlg, WM_DESTROY, NULL, NULL);
+		{
+			int ret = MessageBox(hDlg, L"Are you sure to leave?", L"Caution!", MB_YESNO);
+			if (ret == IDYES) PostMessage(hDlg, WM_DESTROY, NULL, NULL);
+		}
 		break;
 	case WM_DESTROY:
 		//DeleteObject(hPen);
@@ -269,4 +333,48 @@ BOOL CALLBACK ProcDigProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
-//void DrawLine()
+namespace mydef
+{
+void DrawLine(HWND hWnd, int iStyle, int cWidth, COLORREF color, int x0, int y0, int x1, int y1)
+{
+	HDC hdc = GetDC(hWnd);//get handle of device context
+	HPEN hPen = CreatePen(iStyle, cWidth, color);//create pen object
+	SelectObject(hdc, hPen);//
+	//Draw
+	MoveToEx(hdc, x0, y0, NULL);
+	LineTo(hdc, x1, y1);
+	//
+	DeleteObject(hPen);//delete pen object
+	ReleaseDC(hWnd, hdc);//release device context
+}
+
+void DrawTriangle(HWND hWnd, int iStyle, int cWidth, COLORREF colorint, int x0, int y0, int x1, int y1, int x2, int y2)
+{
+	mydef::DrawLine(hWnd, iStyle, cWidth, colorint, x0, y0, x1, y1);
+	mydef::DrawLine(hWnd, iStyle, cWidth, colorint, x1, y1, x2, y2);
+	mydef::DrawLine(hWnd, iStyle, cWidth, colorint, x2, y2, x0, y0);
+}
+
+void DrawCircle(HWND hWnd, int iStyle, int cWidth, COLORREF color, int x, int y, int r, int TotalSample)
+{
+	double dRad, Rad;
+	int Sample;
+	dRad = 2 * PI / TotalSample;
+	POINT *p = (POINT*)calloc(TotalSample, sizeof(POINT));
+	//
+	for (Sample = 0, Rad = 0.0f; Sample < TotalSample; Sample++, Rad += dRad)
+	{
+		(p + Sample)->x = (long)(x + r * cos(Rad));
+		(p + Sample)->y = (long)(y + r * sin(Rad));
+	}
+	HDC hdc = GetDC(hWnd);
+	HPEN hPen = CreatePen(iStyle, cWidth, color);
+	SelectObject(hdc, hPen);
+	Polyline(hdc, p, TotalSample);
+	DeleteObject(hPen);
+	ReleaseDC(hWnd, hdc);
+	//
+	free(p);
+}
+
+}
