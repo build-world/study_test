@@ -15,6 +15,12 @@ def fact(num):
         ctr -= 1
     return mul
 
+def myfact(num):
+    mul = 1
+    for ctr in range(1,num+1):
+        mul *= ctr
+    return mul
+
 #By Taylor formula
 #Thanks to Taylor, I know the significance of constant e.
 def exp(x, precision):
