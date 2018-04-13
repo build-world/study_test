@@ -1,6 +1,6 @@
 #MyMathLib for studying math
 
-#Foundation
+#Foundation Function
 def abs(num):
     if num >= 0:
         return num
@@ -21,16 +21,21 @@ def myfact(num):
         mul *= ctr
     return mul
 
-#By Taylor formula
+#Approximate Function
+
+
+#Taylor formula expansion Function
 #Thanks to Taylor, I know the significance of constant e.
 def exp(x, precision):
     ctr = 0
+    fact = 1.0
     sum = 0.0
     prev = 1.0
     while abs(sum - prev) >= precision:
         prev = sum
-        sum += 1.0 / fact(ctr) * (x ** ctr)
+        sum += 1.0 / fact * (x ** ctr)
         ctr += 1
+        fact *= ctr
     return sum
 
 def log_ln(x, precision=0.1):
@@ -47,30 +52,34 @@ def log_ln(x, precision=0.1):
 
 def sin(rad, precision):
     ctr = 0
+    fact = 1.0
     sum = 0.0
     prev = 1.0
     while abs(sum - prev) >= precision:
         if ctr % 4 != 0 and ctr % 4 != 2:
             if ctr % 4 == 1:
-                sign = 1
+                sign = 1.0
             else:
-                sign = -1
+                sign = -1.0
             prev = sum
-            sum += sign / fact(ctr) * (rad ** ctr)
+            sum += sign / fact * (rad ** ctr)
         ctr += 1
+        fact *= ctr
     return sum
 
 def cos(rad, precision):
     ctr = 0
+    fact = 1.0
     sum = 0.0
     prev = 1.0
     while abs(sum - prev) >= precision:
         if ctr % 4 != 1 and ctr % 4 != 3:
             if ctr % 4 == 0:
-                sign = 1
+                sign = 1.0
             else:
-                sign = -1
+                sign = -1.0
             prev = sum
-            sum += sign / fact(ctr) * (rad ** ctr)
+            sum += sign / fact * (rad ** ctr)
         ctr += 1
+        fact *= ctr
     return sum
