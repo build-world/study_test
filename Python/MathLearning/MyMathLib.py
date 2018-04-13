@@ -11,10 +11,9 @@ def abs(num):
 
 def fact(num):
     mul = 1
-    ctr = num
-    while ctr > 0:
-        mul *= ctr
-        ctr -= 1
+    while num > 0:
+        mul *= num
+        num -= 1
     return mul
 
 def myfact(num):
@@ -77,6 +76,20 @@ def log_ln(x, precision=0.1):
             summ += (y**(i*2))/(2*i+1)
         summ = 2*y*summ
         return summ
+
+def ln_te(x, precision):
+    x -= 1
+    ctr = 0
+    sum = 0.0
+    prev = 1.0
+    sign = 1.0
+    while abs(sum - prev) >= precision:
+        prev = sum
+        temp = ctr + 1
+        sum += sign * (x ** temp) / temp
+        sign = -sign
+        ctr += 1
+    return sum
 
 def sin(rad, precision):
     ctr = 0
