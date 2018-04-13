@@ -1,5 +1,7 @@
 #MyMathLib for studying math
 
+#precision means (error < precision) = TRUE
+
 #Foundation Function
 def abs(num):
     if num >= 0:
@@ -21,12 +23,38 @@ def myfact(num):
         mul *= ctr
     return mul
 
+
 #Approximate Function
+def sqrt(x, precision):
+    y = 0.0
+    dy = 1.0
+    #presearch
+    while y * y < x:
+        y += dy
+    if y * y == x:
+        return y
+    else:
+        high = y
+        y -= dy
+        low = y
+    #binary search
+    dy *= 0.5
+    while high - low >= precision:
+        y = low + dy
+        temp = y * y
+        if temp == x:
+            return y
+        elif temp < x:
+            low = y
+        else:
+            high = y
+        dy *= 0.5
+    return low + dy
 
 
 #Taylor formula expansion Function
 #Thanks to Taylor, I know the significance of constant e.
-def exp(x, precision):
+def exp_te(x, precision):
     ctr = 0
     fact = 1.0
     sum = 0.0
