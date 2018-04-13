@@ -33,6 +33,18 @@ def exp(x, precision):
         ctr += 1
     return sum
 
+def log_ln(x, precision=0.1):
+    """ 0<x y=(x-1)/(x+1)"""
+    y = (x-1.0)/(x+1.0)
+    summ = 0.0
+    if x < 0:
+        return False
+    else:
+        for i in range(10000):
+            summ += (y**(i*2))/(2*i+1)
+        summ = 2*y*summ
+        return summ
+
 def sin(rad, precision):
     ctr = 0
     sum = 0.0
