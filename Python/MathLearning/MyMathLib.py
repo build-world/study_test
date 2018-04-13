@@ -15,6 +15,12 @@ def fact(num):
         ctr -= 1
     return mul
 
+def myfact(num):
+    mul = 1
+    for ctr in range(1,num+1):
+        mul *= ctr
+    return mul
+
 #By Taylor formula
 #Thanks to Taylor, I know the significance of constant e.
 def exp(x, precision):
@@ -26,6 +32,18 @@ def exp(x, precision):
         sum += 1.0 / fact(ctr) * (x ** ctr)
         ctr += 1
     return sum
+
+def log_ln(x, precision=0.1):
+    """ 0<x y=(x-1)/(x+1)"""
+    y = (x-1.0)/(x+1.0)
+    summ = 0.0
+    if x < 0:
+        return False
+    else:
+        for i in range(10000):
+            summ += (y**(i*2))/(2*i+1)
+        summ = 2*y*summ
+        return summ
 
 def sin(rad, precision):
     ctr = 0
