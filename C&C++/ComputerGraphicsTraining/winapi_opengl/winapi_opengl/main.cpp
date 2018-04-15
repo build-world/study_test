@@ -157,6 +157,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_FILE_OPEN:
 				{
 					mydef::OpenFile(hWnd, &MapData);
+					mydef::DispScene(MapData);
+					SwapBuffers(hdc);
 				}
 				break;
             default:
@@ -186,8 +188,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
 			HDC hdc0 = BeginPaint(hWnd, &ps);
             EndPaint(hWnd, &ps);
-			mydef::DispScene();
-			SwapBuffers(hdc);
+			//mydef::DispScene();
+			//SwapBuffers(hdc);
 			
 			//ValidateRect(hWnd, NULL);
         }
@@ -317,7 +319,6 @@ void OpenFile(HWND hWnd, mydef::Map **retMapData)
 		}
 		(*retMapData)->TotalPolygon++;
 	}
-
 }
 
 }

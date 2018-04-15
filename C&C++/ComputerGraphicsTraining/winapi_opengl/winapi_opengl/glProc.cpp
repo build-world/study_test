@@ -25,8 +25,9 @@ void ReSize(int width, int height)
 	glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
 
-void DispScene()
+void DispScene(mydef::Map *MapData)
 {
+	using namespace mydef;
 	glViewport(0, 0, 1280, 720);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -35,16 +36,12 @@ void DispScene()
 	//glRectf(-1.0f, -1.0f, 1.0f, 1.0f);
 	glColor3f(0.0f, 1.0f, 1.0f);
 	//
-	glBegin(GL_LINES);
-	glVertex3f(111.0, 31.0, 0.0);
-	glVertex3f(117.0, 37.0, 0.0);
-	//glVertex2f(-2.0, 0.0);
-	//glVertex2f(2.0, 0.0);
-	//glVertex2i(0, 0);
-	//glVertex2i(10, 10);
-	glEnd();
-	//
-	//DrawCircle(GL_LINE_LOOP, 0.0f, 0.0f, 0.5, 1024);
+	LinkList<Polygon*> *cur = MapData->head;
+	for (int ctr = 0; ctr < MapData->TotalPolygon; ctr++)
+	{
+		DrawPolygon(cur->obj);
+		cur = cur->next;
+	}
 	glFlush();
 }
 
@@ -58,6 +55,20 @@ void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample)
 	{
 		glVertex2f(x + r * cos(Rad), y + r * sin(Rad));
 		//glFlush();
+	}
+	glEnd();
+}
+
+void DrawPolygon(mydef::Polygon *pg)
+{
+	using namespace mydef;
+	LinkList<pMP> *cur = pg->head;
+	//
+	glBegin(GL_LINE_LOOP);
+	for (int ctr = 0; ctr < pg->TotalPoint; ctr++)
+	{
+		glVertex3f(cur->obj->lon, cur->obj->lat, 0.0);
+		cur = cur->next;
 	}
 	glEnd();
 }
