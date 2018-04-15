@@ -5,17 +5,31 @@
 
 #pragma once
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
 #include <windows.h>
+#include <Commdlg.h>//
+#include <gl\GL.h>
+#include <gl\GLU.h>
 
 // C RunTime Header Files
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <stdio.h>
+#include <math.h>
 
+//C++
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
 
-// TODO: reference additional headers your program requires here
+//Linker lib dependence
+#pragma comment (lib, "opengl32.lib")  /* link with Microsoft OpenGL lib */
+#pragma comment (lib, "glu32.lib")     /* link with OpenGL Utility lib */
+
