@@ -189,7 +189,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HDC hdc0 = BeginPaint(hWnd, &ps);
             EndPaint(hWnd, &ps);
 			//mydef::DispScene();
-			//SwapBuffers(hdc);
+			SwapBuffers(hdc);
 			
 			//ValidateRect(hWnd, NULL);
         }
@@ -287,7 +287,7 @@ void OpenFile(HWND hWnd, mydef::Map **retMapData)
 	WriteConsole(hstdout, FileName, lstrlen(FileName), NULL, NULL);
 	WriteConsole(hstdout, TEXT("\n\n"), 2, NULL, NULL);
 	//Read File
-	WriteConsole(hstdout, TEXT("MapPoint:\n"), 10, NULL, NULL);
+	//WriteConsole(hstdout, TEXT("MapPoint:\n"), 10, NULL, NULL);
 	*retMapData = new Map;
 	(*retMapData)->head = NULL;
 	(*retMapData)->TotalPolygon = 0;
@@ -296,9 +296,9 @@ void OpenFile(HWND hWnd, mydef::Map **retMapData)
 	{
 		int TotalPoint;
 		FileObj >> TotalPoint;
-		char strTemp[100];
-		sprintf(strTemp, "%d\n", TotalPoint);
-		WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
+		//char strTemp[100];
+		//sprintf(strTemp, "%d\n", TotalPoint);
+		//WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
 		*cur = new LinkList<Polygon*>;
 		(*cur)->obj = new Polygon(TotalPoint);
 		(*cur)->next = NULL;
@@ -311,14 +311,15 @@ void OpenFile(HWND hWnd, mydef::Map **retMapData)
 			MP mp;
 			FileObj >> mp.lon;
 			FileObj >> mp.lat;
-			sprintf(strTemp, "%f  %f\n", mp.lon, mp.lat);
-			WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
+			//sprintf(strTemp, "%f  %f\n", mp.lon, mp.lat);
+			//WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
 			(*cursor)->obj->lon = mp.lon;
 			(*cursor)->obj->lat = mp.lat;
 			cursor = &((*cursor)->next);
 		}
 		(*retMapData)->TotalPolygon++;
 	}
+	WriteConsole(hstdout, TEXT("\nFile Read Complete!\n\n"), 22, NULL, NULL);
 }
 
 }

@@ -12,30 +12,31 @@ void Init()
 	//glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
 	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	glMatrixMode(GL_PROJECTION | GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
+	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
 
 void ReSize(int width, int height)
 {
 	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION | GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
+	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
 
 void DispScene(mydef::Map *MapData)
 {
 	using namespace mydef;
-	glViewport(0, 0, 1280, 720);
+	//glViewport(0, 0, 1280, 720);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 	//glColor3f(1.0f, 1.0f, 1.0f);
-	//glRectf(-1.0f, -1.0f, 1.0f, 1.0f);
+	//glRectf(110.0f, 30.0f, 118.0f, 38.0f);
 	glColor3f(0.0f, 1.0f, 1.0f);
-	//
+	glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
+	WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), TEXT("Draw Start!\n\n"), 13, NULL, NULL);
 	LinkList<Polygon*> *cur = MapData->head;
 	for (int ctr = 0; ctr < MapData->TotalPolygon; ctr++)
 	{
@@ -62,11 +63,17 @@ void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample)
 void DrawPolygon(mydef::Polygon *pg)
 {
 	using namespace mydef;
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	//char strTemp[100];
+	//sprintf(strTemp, "%d\n", pg->TotalPoint);
+	//WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
 	LinkList<pMP> *cur = pg->head;
 	//
 	glBegin(GL_LINE_LOOP);
 	for (int ctr = 0; ctr < pg->TotalPoint; ctr++)
 	{
+		//sprintf(strTemp, "%f  %f\n", cur->obj->lon, cur->obj->lat);
+		//WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
 		glVertex3f(cur->obj->lon, cur->obj->lat, 0.0);
 		cur = cur->next;
 	}

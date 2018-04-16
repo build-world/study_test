@@ -6,12 +6,6 @@
 namespace mydef
 {
 
-extern void Init();
-extern void ReSize(int width, int height);
-extern void DispScene(mydef::Map *MapData);
-extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
-extern void DrawPolygon(mydef::Polygon *pg);
-
 template<class Elem> class LinkList
 {
 public:
@@ -43,5 +37,11 @@ public:
 	Map();
 	~Map();
 };
+
+extern void Init();
+extern void ReSize(int width, int height);
+extern void DispScene(mydef::Map *MapData);
+extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
+extern void DrawPolygon(mydef::Polygon *pg);
 
 }
