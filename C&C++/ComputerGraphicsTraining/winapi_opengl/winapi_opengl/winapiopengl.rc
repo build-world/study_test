@@ -49,6 +49,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_EXIT
     END
+    POPUP "&OpenGL"
+    BEGIN
+        MENUITEM "&Control",                    ID_OPENGL_CONTROL
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About ...",                  IDM_ABOUT
@@ -84,6 +88,21 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
+IDD_DIALOG1 DIALOGEX 0, 0, 309, 176
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Control"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Zoom In",IDC_BUTTON1,91,70,50,14
+    PUSHBUTTON      "Zoom Out",IDC_BUTTON2,91,89,50,14
+    PUSHBUTTON      "Button3",IDC_BUTTON3,166,70,50,14
+    PUSHBUTTON      "Button4",IDC_BUTTON4,166,89,50,14
+    PUSHBUTTON      "Up",IDC_BUTTON5,121,7,50,14
+    PUSHBUTTON      "Down",IDC_BUTTON6,123,155,50,14
+    PUSHBUTTON      "Left",IDC_BUTTON7,7,78,50,14
+    PUSHBUTTON      "Right",IDC_BUTTON8,252,80,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -99,6 +118,14 @@ BEGIN
         RIGHTMARGIN, 163
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 169
     END
 END
 #endif    // APSTUDIO_INVOKED

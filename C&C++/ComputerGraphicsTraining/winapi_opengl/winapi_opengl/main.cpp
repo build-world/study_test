@@ -20,12 +20,15 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+//
+BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 //mydef
 namespace mydef
 {
 void glEnvEnable(HWND hWnd, HDC *phdc, HGLRC *phglrc);
 void glEnvDisable(HWND hWnd, HDC hdc, HGLRC hglrc);
 void OpenFile(HWND hWnd, mydef::Map **retMapData);
+void* GlobalVar(void *input);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -161,6 +164,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					SwapBuffers(hdc);
 				}
 				break;
+			case ID_OPENGL_CONTROL:
+				{
+					HWND hCtrlDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, CtrlDlgProc);
+					if (hCtrlDlg) ShowWindow(hCtrlDlg, SW_SHOW);
+				}
+				break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
@@ -169,6 +178,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		{
 			mydef::glEnvEnable(hWnd, &hdc, &hglrc);
+			mydef::GlobalVar(&hdc);
 			//SetTimer(hWnd, 33, 1, NULL);
 			mydef::Init();
 		}
@@ -176,6 +186,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		{
 			mydef::ReSize(LOWORD(lParam), HIWORD(lParam));
+			SwapBuffers(hdc);
 		}
 		break;
 	case WM_TIMER:
@@ -188,7 +199,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
 			HDC hdc0 = BeginPaint(hWnd, &ps);
             EndPaint(hWnd, &ps);
-			//mydef::DispScene();
 			SwapBuffers(hdc);
 			
 			//ValidateRect(hWnd, NULL);
@@ -229,6 +239,91 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_COMMAND:
+		{
+			int wmId = LOWORD(wParam);
+			switch (wmId)
+			{
+			case IDC_BUTTON1:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_ZOOMIN);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON2:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_ZOOMOUT);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON3:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_NEAR);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON4:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_FAR);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON5:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_UP);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON6:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_DOWN);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON7:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_LEFT);
+					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON8:
+				{
+					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
+					mydef::ResetGLWin(CMD_RIGHT);
+					SwapBuffers(*phdc);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		break;
+	case WM_CLOSE:
+		{
+			PostMessage(hDlg, WM_DESTROY, NULL, NULL);
+		}
+		break;
+	case WM_DESTROY:
+		{
+			DestroyWindow(hDlg);
+		}
+	default:
+		return FALSE;
+	}
+	return TRUE;
 }
 
 
@@ -320,6 +415,14 @@ void OpenFile(HWND hWnd, mydef::Map **retMapData)
 		(*retMapData)->TotalPolygon++;
 	}
 	WriteConsole(hstdout, TEXT("\nFile Read Complete!\n\n"), 22, NULL, NULL);
+}
+
+void* GlobalVar(void *input)
+{
+	static void *save;
+	if (input)
+		save = input;
+	return save;
 }
 
 }

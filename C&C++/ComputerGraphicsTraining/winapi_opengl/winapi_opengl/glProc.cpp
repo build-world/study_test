@@ -19,31 +19,94 @@ void Init()
 
 void ReSize(int width, int height)
 {
-	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	glViewport(0, 0, width, height);
 	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
+}
+
+void ResetGLWin(int cmd)
+{
+	static GLdouble
+		Left = 106.0,
+		Right = 122.0,
+		Bottom = 30.0,
+		Top = 39.0,
+		Near = -1.0,
+		Far = 1.0;
+	switch (cmd)
+	{
+	case CMD_ZOOMIN:
+		{
+			Left += DWIDTH;
+			Right -= DWIDTH;
+			Bottom += DHEIGHT;
+			Top -= DHEIGHT;
+		}
+		break;
+	case CMD_ZOOMOUT:
+		{
+			Left -= DWIDTH;
+			Right += DWIDTH;
+			Bottom -= DHEIGHT;
+			Top += DHEIGHT;
+		}
+		break;
+	case CMD_NEAR:
+		{
+			
+		}
+		break;
+	case CMD_FAR:
+		{
+			
+		}
+		break;
+	case CMD_UP:
+		{
+			Bottom -= DMOVE;
+			Top -= DMOVE;
+		}
+		break;
+	case CMD_DOWN:
+		{
+			Bottom += DMOVE;
+			Top += DMOVE;
+		}
+		break;
+	case CMD_LEFT:
+		{
+			Left += DMOVE;
+			Right += DMOVE;
+		}
+		break;
+	case CMD_RIGHT:
+		{
+			Left -= DMOVE;
+			Right -= DMOVE;
+		}
+		break;
+	default:
+		break;
+	}
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
+	glColor3f(0.0f, 1.0f, 1.0f);
+	glOrtho(Left, Right, Bottom, Top, Near, Far);
+	DrawMap(NULL);
 }
 
 void DispScene(mydef::Map *MapData)
 {
 	using namespace mydef;
-	//glViewport(0, 0, 1280, 720);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-	//glColor3f(1.0f, 1.0f, 1.0f);
-	//glRectf(110.0f, 30.0f, 118.0f, 38.0f);
 	glColor3f(0.0f, 1.0f, 1.0f);
-	glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
+	glOrtho(106.0, 122.0, 30.0, 39.0, -1.0, 1.0);
 	WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), TEXT("Draw Start!\n\n"), 13, NULL, NULL);
-	LinkList<Polygon*> *cur = MapData->head;
-	for (int ctr = 0; ctr < MapData->TotalPolygon; ctr++)
-	{
-		DrawPolygon(cur->obj);
-		cur = cur->next;
-	}
-	glFlush();
+	DrawMap(MapData);
 }
 
 void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample)
@@ -78,6 +141,20 @@ void DrawPolygon(mydef::Polygon *pg)
 		cur = cur->next;
 	}
 	glEnd();
+}
+
+void DrawMap(mydef::Map *MapData)
+{
+	using namespace mydef;
+	static Map *save;
+	if (MapData) save = MapData;
+	LinkList<Polygon*> *cur = save->head;
+	for (int ctr = 0; ctr < save->TotalPolygon; ctr++)
+	{
+		DrawPolygon(cur->obj);
+		cur = cur->next;
+	}
+	glFlush();
 }
 
 Polygon::Polygon(int TotalPoint)
