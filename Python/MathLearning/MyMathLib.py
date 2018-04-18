@@ -124,3 +124,23 @@ def cos(rad, precision):
         ctr += 1
         fact *= ctr
     return sum
+
+# expression of  active function
+def sigmoid(x):
+    s = 1/(1+exp_te(-x, 0.000001))
+    return s
+
+def relu(x, a=0.25):
+    if a < 0:
+        x *= a
+    return x
+
+def tanh(x):
+    tmp = exp_te(-2*x, 0.000001)
+    y = (1-tmp)/(1+tmp)
+    return y
+
+def elu(x, a=0.25):
+    if x < 0:
+        x = a*(exp_te(x, 0.000001)-1)
+    return x
