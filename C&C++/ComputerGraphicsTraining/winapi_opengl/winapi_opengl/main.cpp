@@ -28,7 +28,7 @@ namespace mydef
 void glEnvEnable(HWND hWnd, HDC *phdc, HGLRC *phglrc);
 void glEnvDisable(HWND hWnd, HDC hdc, HGLRC hglrc);
 void OpenFile(HWND hWnd, mydef::Map **retMapData);
-void* GlobalVar(void *input);
+void* GlobalVarHDC(void *input);
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -160,7 +160,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_FILE_OPEN:
 				{
 					mydef::OpenFile(hWnd, &MapData);
-					mydef::DispScene(MapData);
+					mydef::SceneProc(CMD_DISP, NULL, NULL, MapData);
 					SwapBuffers(hdc);
 				}
 				break;
@@ -178,14 +178,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		{
 			mydef::glEnvEnable(hWnd, &hdc, &hglrc);
-			mydef::GlobalVar(&hdc);
+			mydef::GlobalVarHDC(&hdc);
 			//SetTimer(hWnd, 33, 1, NULL);
 			mydef::Init();
 		}
 		break;
 	case WM_SIZE:
 		{
-			mydef::ReSize(LOWORD(lParam), HIWORD(lParam));
+			mydef::SceneProc(CMD_RESIZE, LOWORD(lParam), HIWORD(lParam), NULL);
 			SwapBuffers(hdc);
 		}
 		break;
@@ -199,8 +199,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
 			HDC hdc0 = BeginPaint(hWnd, &ps);
             EndPaint(hWnd, &ps);
-			SwapBuffers(hdc);
-			
+			//SwapBuffers(hdc);
 			//ValidateRect(hWnd, NULL);
         }
         break;
@@ -252,58 +251,63 @@ BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 			case IDC_BUTTON1:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_ZOOMIN);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_ZOOMIN, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON2:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_ZOOMOUT);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_ZOOMOUT, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON3:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_NEAR);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_NEAR, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON4:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_FAR);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_FAR, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON5:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_UP);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_UP, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON6:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_DOWN);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_DOWN, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON7:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_LEFT);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_LEFT, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON8:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVar(NULL);
-					mydef::ResetGLWin(CMD_RIGHT);
+					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
+					mydef::SceneProc(CMD_RIGHT, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
+				}
+				break;
+			case IDC_BUTTON9:
+				{
+					mydef::SceneProc(CMD_INVERSE, NULL, NULL, NULL);
 				}
 				break;
 			default:
@@ -417,7 +421,7 @@ void OpenFile(HWND hWnd, mydef::Map **retMapData)
 	WriteConsole(hstdout, TEXT("\nFile Read Complete!\n\n"), 22, NULL, NULL);
 }
 
-void* GlobalVar(void *input)
+void* GlobalVarHDC(void *input)
 {
 	static void *save;
 	if (input)

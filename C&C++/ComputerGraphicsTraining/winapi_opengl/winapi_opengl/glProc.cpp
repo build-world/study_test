@@ -16,40 +16,52 @@ void Init()
 	glLoadIdentity();
 	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
-
+/*
 void ReSize(int width, int height)
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, width, height);
-	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
-
-void ResetGLWin(int cmd)
+*/
+void SceneProc(int cmd, int width, int height, mydef::Map *MapData)
 {
+	static Map *save = NULL;
 	static GLdouble
-		Left = 106.0,
-		Right = 122.0,
-		Bottom = 30.0,
-		Top = 39.0,
-		Near = -1.0,
-		Far = 1.0;
+		x = INIT_X,
+		y = INIT_Y,
+		fov = INIT_FOV,
+		scale = 0.0,
+		dmove = INIT_DMOVE,
+		dzoom = INIT_DZOOM,
+		//
+		Left = 0.0,
+		Right = 0.0,
+		Bottom = 0.0,
+		Top = 0.0,
+		//
+		Near = INIT_NEAR,
+		Far = INIT_FAR;
+	int ReDrawFlag = NULL;
+	if (MapData) save = MapData;
+	//
 	switch (cmd)
 	{
+	case CMD_DISP:
+		{
+			ReDrawFlag = 1;
+		}
+		break;
 	case CMD_ZOOMIN:
 		{
-			Left += DWIDTH;
-			Right -= DWIDTH;
-			Bottom += DHEIGHT;
-			Top -= DHEIGHT;
+			fov -= dzoom;
+			ReDrawFlag = 1;
 		}
 		break;
 	case CMD_ZOOMOUT:
 		{
-			Left -= DWIDTH;
-			Right += DWIDTH;
-			Bottom -= DHEIGHT;
-			Top += DHEIGHT;
+			fov += dzoom;
+			ReDrawFlag = 1;
 		}
 		break;
 	case CMD_NEAR:
@@ -64,49 +76,60 @@ void ResetGLWin(int cmd)
 		break;
 	case CMD_UP:
 		{
-			Bottom -= DMOVE;
-			Top -= DMOVE;
+			y += dmove;
+			ReDrawFlag = 1;
 		}
 		break;
 	case CMD_DOWN:
 		{
-			Bottom += DMOVE;
-			Top += DMOVE;
+			y -= dmove;
+			ReDrawFlag = 1;
 		}
 		break;
 	case CMD_LEFT:
 		{
-			Left += DMOVE;
-			Right += DMOVE;
+			x -= dmove;
+			ReDrawFlag = 1;
 		}
 		break;
 	case CMD_RIGHT:
 		{
-			Left -= DMOVE;
-			Right -= DMOVE;
+			x += dmove;
+			ReDrawFlag = 1;
+		}
+		break;
+	case CMD_INVERSE:
+		{
+			dmove *= -1.0;
+		}
+		break;
+	case CMD_RESIZE:
+		{
+			if (width && height)
+				scale = width * 1.0 / height;
+			glViewport(0, 0, width, height);
+			ReDrawFlag = 1;
 		}
 		break;
 	default:
 		break;
 	}
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
-	glColor3f(0.0f, 1.0f, 1.0f);
-	glOrtho(Left, Right, Bottom, Top, Near, Far);
-	DrawMap(NULL);
-}
-
-void DispScene(mydef::Map *MapData)
-{
-	using namespace mydef;
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
-	glColor3f(0.0f, 1.0f, 1.0f);
-	glOrtho(106.0, 122.0, 30.0, 39.0, -1.0, 1.0);
-	WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), TEXT("Draw Start!\n\n"), 13, NULL, NULL);
-	DrawMap(MapData);
+	if (ReDrawFlag)
+	{
+		GLdouble temp;
+		temp = scale * fov;
+		Left = x - temp;
+		Right = x + temp;
+		Bottom = y - fov;
+		Top = y + fov;
+		//
+		glClearColor(0.0, 0.0, 0.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glLoadIdentity();
+		glColor3f(0.0f, 1.0f, 1.0f);
+		glOrtho(Left, Right, Bottom, Top, Near, Far);
+		if (save) DrawMap(save);
+	}
 }
 
 void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample)
@@ -126,7 +149,7 @@ void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample)
 void DrawPolygon(mydef::Polygon *pg)
 {
 	using namespace mydef;
-	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	//HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	//char strTemp[100];
 	//sprintf(strTemp, "%d\n", pg->TotalPoint);
 	//WriteConsoleA(hstdout, strTemp, lstrlenA(strTemp), NULL, NULL);
@@ -146,10 +169,8 @@ void DrawPolygon(mydef::Polygon *pg)
 void DrawMap(mydef::Map *MapData)
 {
 	using namespace mydef;
-	static Map *save;
-	if (MapData) save = MapData;
-	LinkList<Polygon*> *cur = save->head;
-	for (int ctr = 0; ctr < save->TotalPolygon; ctr++)
+	LinkList<Polygon*> *cur = MapData->head;
+	for (int ctr = 0; ctr < MapData->TotalPolygon; ctr++)
 	{
 		DrawPolygon(cur->obj);
 		cur = cur->next;
