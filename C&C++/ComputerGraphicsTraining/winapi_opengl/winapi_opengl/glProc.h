@@ -18,6 +18,7 @@
 #define INIT_X 114.0
 #define INIT_Y 34.0
 #define INIT_FOV 4.0
+#define INIT_SCALE 16.0/9
 #define INIT_DMOVE -0.1
 #define INIT_DZOOM 0.1
 #define INIT_NEAR -1.0
@@ -60,7 +61,6 @@ public:
 };
 
 extern void Init();
-//extern void ReSize(int width, int height);
 extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData);
 extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
 extern void DrawPolygon(mydef::Polygon *pg);

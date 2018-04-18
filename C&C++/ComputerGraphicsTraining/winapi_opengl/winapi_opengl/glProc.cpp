@@ -16,14 +16,6 @@ void Init()
 	glLoadIdentity();
 	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
-/*
-void ReSize(int width, int height)
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glViewport(0, 0, width, height);
-}
-*/
 void SceneProc(int cmd, int width, int height, mydef::Map *MapData)
 {
 	static Map *save = NULL;
@@ -31,17 +23,17 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData)
 		x = INIT_X,
 		y = INIT_Y,
 		fov = INIT_FOV,
-		scale = 0.0,
+		scale = INIT_SCALE,
 		dmove = INIT_DMOVE,
 		dzoom = INIT_DZOOM,
+		//
+		Near = INIT_NEAR,
+		Far = INIT_FAR,
 		//
 		Left = 0.0,
 		Right = 0.0,
 		Bottom = 0.0,
-		Top = 0.0,
-		//
-		Near = INIT_NEAR,
-		Far = INIT_FAR;
+		Top = 0.0;
 	int ReDrawFlag = NULL;
 	if (MapData) save = MapData;
 	//
