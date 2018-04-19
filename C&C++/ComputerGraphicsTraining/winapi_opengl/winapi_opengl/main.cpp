@@ -113,7 +113,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      0, 0, 1280, 720, nullptr, nullptr, hInstance, nullptr);
+      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -338,9 +338,6 @@ void glEnvEnable(HWND hWnd, HDC *phdc, HGLRC *phglrc)
 {
 	PIXELFORMATDESCRIPTOR pfd;
 	ZeroMemory(&pfd, sizeof(pfd));
-	*phdc = GetDC(hWnd);
-	//*phdc = GetDC(hWnd);
-	//pfd registration
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
 	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
@@ -349,11 +346,10 @@ void glEnvEnable(HWND hWnd, HDC *phdc, HGLRC *phglrc)
 	pfd.cDepthBits = 16;
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	//
+	*phdc = GetDC(hWnd);
 	int iFormat = ChoosePixelFormat(*phdc, &pfd);
 	SetPixelFormat(*phdc, iFormat, &pfd);
-	//
 	*phglrc = wglCreateContext(*phdc);
-	//*phglrc = wglCreateContext(*phdc);
 	wglMakeCurrent(*phdc, *phglrc);
 }
 
