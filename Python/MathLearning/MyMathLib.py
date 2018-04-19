@@ -124,3 +124,39 @@ def cos(rad, precision):
         ctr += 1
         fact *= ctr
     return sum
+
+
+# expression of active functions
+# Hyperbolic function
+def sinh(x, precision=0.000001):
+    y = (exp_te(x, precision) - exp_te(-x, precision))/2
+    return y
+
+def cosh(x, precision=0.000001):
+    y = (exp_te(x, precision) + exp_te(-x, precision))/2
+    return y
+
+def tanh(x):
+    """tanh(x) = sinh(x)/cosh(x) = (e(x)-e(-x))/(e(x)+e(-x))"""
+    y = sinh(x)/cosh(x)
+    return y
+
+# sigmoid function
+def sigmoid(x, precision=0.000001):
+    s = 1/(1+exp_te(-x, precision))
+    return s
+
+# Rectified Linear Unit function and variants
+def relu(x):
+    x = max(0, x)
+    return x
+
+def prelu(x, a=0.25):
+    if a < 0:
+        x *= a
+    return x
+
+def elu(x, a=0.25, precision=0.000001):
+    if x < 0:
+        x = a*(exp_te(x, precision)-1)
+    return x
