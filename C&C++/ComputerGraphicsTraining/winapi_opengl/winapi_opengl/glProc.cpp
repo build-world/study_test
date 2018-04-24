@@ -16,110 +16,143 @@ void Init()
 	glLoadIdentity();
 	//glOrtho(110.0, 118.0, 30.0, 38.0, -1.0, 1.0);
 }
-void SceneProc(int cmd, int width, int height, mydef::Map *MapData)
+void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP SetParam)
 {
+	using namespace mydef;
 	static Map *save = NULL;
-	static GLdouble
-		x = INIT_X,
-		y = INIT_Y,
-		fov = INIT_FOV,
-		scale = INIT_SCALE,
-		dmove = INIT_DMOVE,
-		dzoom = INIT_DZOOM,
-		//
-		Near = INIT_NEAR,
-		Far = INIT_FAR,
-		//
-		Left = 0.0,
-		Right = 0.0,
-		Bottom = 0.0,
-		Top = 0.0;
+	static SP Param;
 	int ReDrawFlag = NULL;
+	int PolyCmdFlag = NULL;
+	int cmdmax;
 	if (MapData) save = MapData;
 	//
-	switch (cmd)
+	for (cmdmax = 1; cmdmax < cmd; cmdmax <<= 1);
+	if (cmdmax != cmd)
 	{
-	case CMD_DISP:
+		PolyCmdFlag = 1;
+		cmdmax >>= 1;
+	}
+	for (int ctr = 1; ctr <= cmdmax; ctr <<= 1)
+	{
+		int temp = cmd;
+		if (PolyCmdFlag)
+			temp &= ctr;
+		switch (temp)
 		{
-			ReDrawFlag = 1;
+		case CMD_GLINIT:
+			{
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+			}
+			break;
+		case CMD_DISP:
+			{
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_ZOOMIN:
+			{
+				Param.fov -= Param.dzoom;
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_ZOOMOUT:
+			{
+				Param.fov += Param.dzoom;
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_UP:
+			{
+				Param.y += Param.dmove;
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_DOWN:
+			{
+				Param.y -= Param.dmove;
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_LEFT:
+			{
+				Param.x -= Param.dmove;
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_RIGHT:
+			{
+				Param.x += Param.dmove;
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_INVERSE:
+			{
+				Param.dmove *= -1.0;
+			}
+			break;
+		case CMD_RESIZE:
+			{
+				if (width && height)
+					Param.scale = width * 1.0 / height;
+				glViewport(0, 0, width, height);
+				ReDrawFlag = 1;
+			}
+			break;
+		case CMD_SET:
+			{
+				Param.x = SetParam->x;
+				Param.y = SetParam->y;
+				Param.fov = SetParam->fov;
+				//
+				Param.dmove = SetParam->dmove;
+				Param.dzoom = SetParam->dzoom;
+				Param.Near = SetParam->Near;
+				Param.Far = SetParam->Far;
+			}
+			break;
+		case CMD_RESET:
+			{
+				Param.x = INIT_X;
+				Param.y = INIT_Y;
+				Param.fov = INIT_FOV;
+				Param.scale = INIT_SCALE;
+				Param.dmove = INIT_DMOVE;
+				Param.dzoom = INIT_DZOOM;
+				Param.Near = INIT_NEAR;
+				Param.Far = INIT_FAR;
+			}
+			break;
+		default:
+			break;
 		}
-		break;
-	case CMD_ZOOMIN:
-		{
-			fov -= dzoom;
-			ReDrawFlag = 1;
-		}
-		break;
-	case CMD_ZOOMOUT:
-		{
-			fov += dzoom;
-			ReDrawFlag = 1;
-		}
-		break;
-	case CMD_NEAR:
-		{
-			
-		}
-		break;
-	case CMD_FAR:
-		{
-			
-		}
-		break;
-	case CMD_UP:
-		{
-			y += dmove;
-			ReDrawFlag = 1;
-		}
-		break;
-	case CMD_DOWN:
-		{
-			y -= dmove;
-			ReDrawFlag = 1;
-		}
-		break;
-	case CMD_LEFT:
-		{
-			x -= dmove;
-			ReDrawFlag = 1;
-		}
-		break;
-	case CMD_RIGHT:
-		{
-			x += dmove;
-			ReDrawFlag = 1;
-		}
-		break;
-	case CMD_INVERSE:
-		{
-			dmove *= -1.0;
-		}
-		break;
-	case CMD_RESIZE:
-		{
-			if (width && height)
-				scale = width * 1.0 / height;
-			glViewport(0, 0, width, height);
-			ReDrawFlag = 1;
-		}
-		break;
-	default:
-		break;
+		if (!PolyCmdFlag)
+			break;
 	}
 	if (ReDrawFlag)
 	{
+		/*
 		GLdouble temp;
-		temp = scale * fov;
-		Left = x - temp;
-		Right = x + temp;
-		Bottom = y - fov;
-		Top = y + fov;
+		temp = Param.scale * Param.fov;
+		Param.Left = Param.x - temp;
+		Param.Right = Param.x + temp;
+		Param.Bottom = Param.y - Param.fov;
+		Param.Top = Param.y + Param.fov;
+		*/
+		GLdouble tempx, tempy;
+		tempy = std::sqrt((Param.fov * Param.fov) / (Param.scale * Param.scale + 1));
+		tempx = Param.scale * tempy;
+		Param.Left = Param.x - tempx;
+		Param.Right = Param.x + tempx;
+		Param.Bottom = Param.y - tempy;
+		Param.Top = Param.y + tempy;
 		//
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glLoadIdentity();
 		glColor3f(0.0f, 1.0f, 1.0f);
-		glOrtho(Left, Right, Bottom, Top, Near, Far);
+		glOrtho(Param.Left, Param.Right, Param.Bottom, Param.Top, Param.Near, Param.Far);
 		if (save) DrawMap(save);
 	}
 }

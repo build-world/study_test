@@ -3,17 +3,19 @@
 
 #define PI 3.141592653589793
 
-#define CMD_DISP 0
-#define CMD_ZOOMIN 1
-#define CMD_ZOOMOUT 2
-#define CMD_NEAR 4
-#define CMD_FAR 8
+//#define CMD_POLYCMD 1
+#define CMD_GLINIT 1
+#define CMD_DISP 2
+#define CMD_ZOOMIN 4
+#define CMD_ZOOMOUT 8
 #define CMD_UP 16
 #define CMD_DOWN 32
 #define CMD_LEFT 64
 #define CMD_RIGHT 128
 #define CMD_INVERSE 256
 #define CMD_RESIZE 512
+#define CMD_SET 1024
+#define CMD_RESET 2048
 
 #define INIT_X 114.0
 #define INIT_Y 34.0
@@ -60,8 +62,26 @@ public:
 	~Map();
 };
 
+typedef struct SceneParam
+{
+	GLdouble
+		x,
+		y,
+		fov,
+		scale,
+		dmove,
+		dzoom,
+		Near,
+		Far,
+		//
+		Left,
+		Right,
+		Bottom,
+		Top;
+}SP, *pSP;
+
 extern void Init();
-extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData);
+extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP SetParam);
 extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
 extern void DrawPolygon(mydef::Polygon *pg);
 extern void DrawMap(mydef::Map *MapData);
