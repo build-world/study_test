@@ -30,6 +30,14 @@
 #define IDC_EDIT6                       1024
 #define IDC_EDIT7                       1025
 #define IDC_BUTTON10                    1026
+#define IDC_BUTTON11                    1027
+#define IDC_BUTTON12                    1028
+#define IDC_BUTTON13                    1029
+#define IDC_BUTTON14                    1030
+#define IDC_BUTTON15                    1031
+#define IDC_BUTTON16                    1032
+#define IDC_BUTTON17                    1033
+#define IDC_BUTTON18                    1034
 #define ID_FILE_OPEN                    32771
 #define ID_CONTROL_CONTR                32772
 #define ID_OPENGL_CONTROL               32773
@@ -42,7 +50,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1035
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

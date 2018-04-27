@@ -20,9 +20,14 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 {
 	using namespace mydef;
 	static Map *save = NULL;
-	static SP Param;
-	int ReDrawFlag = NULL;
+	static SIP Param;
+	//flag
+	int DrawFlag = NULL;
 	int PolyCmdFlag = NULL;
+	int RollFlag = NULL;
+	int PitchFlag = NULL;
+	int YawFlag = NULL;
+	int FovFlag = NULL;
 	int cmdmax;
 	if (MapData) save = MapData;
 	//
@@ -39,71 +44,101 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 			temp &= ctr;
 		switch (temp)
 		{
-		case CMD_GLINIT:
-			{
-				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-			}
-			break;
-		case CMD_DISP:
-			{
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_ZOOMIN:
-			{
-				Param.fov -= Param.dzoom;
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_ZOOMOUT:
-			{
-				Param.fov += Param.dzoom;
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_UP:
-			{
-				Param.y += Param.dmove;
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_DOWN:
-			{
-				Param.y -= Param.dmove;
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_LEFT:
-			{
-				Param.x -= Param.dmove;
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_RIGHT:
-			{
-				Param.x += Param.dmove;
-				ReDrawFlag = 1;
-			}
-			break;
-		case CMD_INVERSE:
-			{
-				Param.dmove *= -1.0;
-			}
-			break;
-		case CMD_RESIZE:
+		case CMD_EXEC_RESIZE:
 			{
 				if (width && height)
 					Param.scale = width * 1.0 / height;
 				glViewport(0, 0, width, height);
-				ReDrawFlag = 1;
+				FovFlag = 1;
 			}
 			break;
-		case CMD_SET:
+		case CMD_EXEC_DISP:
 			{
-				Param.x = SetParam->x;
-				Param.y = SetParam->y;
+				DrawFlag = 1;
+			}
+			break;
+		case CMD_EXEC_ZOOMIN:
+			{
+				Param.fov -= Param.dzoom;
+				FovFlag = 1;
+			}
+			break;
+		case CMD_EXEC_ZOOMOUT:
+			{
+				Param.fov += Param.dzoom;
+				FovFlag = 1;
+			}
+			break;
+		case CMD_EXEC_UP:
+			{
+				Param.centery += Param.dmove;
+				DrawFlag = 1;
+			}
+			break;
+		case CMD_EXEC_DOWN:
+			{
+				Param.centery -= Param.dmove;
+				DrawFlag = 1;
+			}
+			break;
+		case CMD_EXEC_LEFT:
+			{
+				Param.centerx -= Param.dmove;
+				DrawFlag = 1;
+			}
+			break;
+		case CMD_EXEC_RIGHT:
+			{
+				Param.centerx += Param.dmove;
+				DrawFlag = 1;
+			}
+			break;
+		case CMD_EXEC_ROLLLEFT:
+			{
+				Param.roll += Param.drotate;
+				RollFlag = 1;
+			}
+			break;
+		case CMD_EXEC_ROLLRIGHT:
+			{
+				Param.roll -= Param.drotate;
+				RollFlag = 1;
+			}
+			break;
+		case CMD_EXEC_PITCHUP:
+			{
+				Param.pitch += Param.drotate;
+				PitchFlag = 1;
+			}
+			break;
+		case CMD_EXEC_PITCHDOWN:
+			{
+				Param.pitch -= Param.drotate;
+				PitchFlag = -1;
+			}
+			break;
+		case CMD_EXEC_YAWLEFT:
+			{
+				Param.yaw -= Param.drotate;
+				YawFlag = -1;
+			}
+			break;
+		case CMD_EXEC_YAWRIGHT:
+			{
+				Param.yaw += Param.drotate;
+				YawFlag = 1;
+			}
+			break;
+		case CMD_EXEC_INIT:
+			{
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glEnable(GL_DEPTH_TEST);
+			}
+			break;
+		case CMD_EXEC_SET:
+			{
+				Param.centerx = SetParam->centerx;
+				Param.centery = SetParam->centery;
 				Param.fov = SetParam->fov;
 				//
 				Param.dmove = SetParam->dmove;
@@ -112,16 +147,49 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 				Param.Far = SetParam->Far;
 			}
 			break;
-		case CMD_RESET:
+		case CMD_EXEC_RESET_ALL:
 			{
-				Param.x = INIT_X;
-				Param.y = INIT_Y;
+				Param.centerx = INIT_CENTERX;
+				Param.centery = INIT_CENTERY;
+				Param.centerz = INIT_CENTERZ;
+				Param.eyex = INIT_EYEX;
+				Param.eyey = INIT_EYEY;
+				Param.eyez = INIT_EYEZ;
+				Param.roll = INIT_ROLL;
+				Param.pitch = INIT_PITCH;
+				Param.yaw = INIT_YAW;
+				//
 				Param.fov = INIT_FOV;
 				Param.scale = INIT_SCALE;
 				Param.dmove = INIT_DMOVE;
 				Param.dzoom = INIT_DZOOM;
+				Param.drotate = INIT_DROTATE;
+
 				Param.Near = INIT_NEAR;
 				Param.Far = INIT_FAR;
+				//
+				Param.upx = INIT_UPX;
+				Param.upy = INIT_UPY;
+				Param.upz = INIT_UPZ;
+				Param.distance = std::sqrt(std::pow(Param.eyex - Param.centerx, 2) + std::pow(Param.eyey - Param.centery, 2) + std::pow(Param.eyez - Param.centerz, 2));
+				FovFlag = 1;
+			}
+			break;
+		case CMD_EXEC_INVERSE:
+			{
+				Param.dmove *= -1.0;
+			}
+			break;
+		case CMD_DEF_ORTHO:
+			{
+				Param.projf = PROJ_ORTHO;
+				DrawFlag = 1;
+			}
+			break;
+		case CMD_DEF_FRUSTUM:
+			{
+				Param.projf = PROJ_FRUSTUM;
+				DrawFlag = 1;
 			}
 			break;
 		default:
@@ -130,30 +198,87 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		if (!PolyCmdFlag)
 			break;
 	}
-	if (ReDrawFlag)
+	if (PitchFlag)
 	{
-		/*
-		GLdouble temp;
-		temp = Param.scale * Param.fov;
-		Param.Left = Param.x - temp;
-		Param.Right = Param.x + temp;
-		Param.Bottom = Param.y - Param.fov;
-		Param.Top = Param.y + Param.fov;
-		*/
-		GLdouble tempx, tempy;
-		tempy = std::sqrt((Param.fov * Param.fov) / (Param.scale * Param.scale + 1));
-		tempx = Param.scale * tempy;
-		Param.Left = Param.x - tempx;
-		Param.Right = Param.x + tempx;
-		Param.Bottom = Param.y - tempy;
-		Param.Top = Param.y + tempy;
+		GLdouble dAngle, temp_sin, temp_cos, temp_x, temp_y;
+		dAngle = PitchFlag * Param.drotate;
+		temp_sin = std::sin(dAngle * PI);
+		temp_cos = std::cos(dAngle * PI);
+		//eye coord
+		temp_x = Param.eyey;
+		temp_y = Param.eyez;
+		Param.eyey = temp_x * temp_cos - temp_y * temp_sin;
+		Param.eyez = temp_x * temp_sin + temp_y * temp_cos;
+		//up coord
+		temp_x = Param.upy;
+		temp_y = Param.upz;
+		Param.upy = temp_x * temp_cos - temp_y * temp_sin;
+		Param.upz = temp_x * temp_sin + temp_y * temp_cos;
 		//
+		FovFlag = 1;
+		DrawFlag = 1;
+	}
+	if (YawFlag)
+	{
+		GLdouble dAngle, temp_sin, temp_cos, temp_x, temp_y;
+		dAngle = YawFlag * Param.drotate;
+		temp_sin = std::sin(dAngle * PI);
+		temp_cos = std::cos(dAngle * PI);
+		//eye coord
+		temp_x = Param.eyex;
+		temp_y = Param.eyez;
+		Param.eyex = temp_x * temp_cos - temp_y * temp_sin;
+		Param.eyez = temp_x * temp_sin + temp_y * temp_cos;
+		//
+		FovFlag = 1;
+		DrawFlag = 1;
+	}
+	if (RollFlag)
+	{
+		GLdouble dAngle, temp_sin, temp_cos, temp_x, temp_y;
+		dAngle = RollFlag * Param.drotate;
+		temp_sin = std::sin(dAngle * PI);
+		temp_cos = std::cos(dAngle * PI);
+		//up coord
+		temp_x = Param.upx;
+		temp_y = Param.upy;
+		Param.upx = temp_x * temp_cos - temp_y * temp_sin;
+		Param.upy = temp_x * temp_sin + temp_y * temp_cos;
+		//
+		FovFlag = 1;
+		DrawFlag = 1;
+	}
+	if (FovFlag)
+	{
+		GLdouble tempx, tempy, diag;
+		diag = std::tan(Param.fov / 2 * PI) * Param.distance;
+		tempy = std::sqrt((diag * diag) / (Param.scale * Param.scale + 1));
+		tempx = Param.scale * tempy;
+		Param.Left = -tempx;
+		Param.Right = tempx;
+		Param.Bottom = -tempy;
+		Param.Top = tempy;
+		//
+		DrawFlag = 1;
+	}
+	if (DrawFlag)
+	{
 		glClearColor(0.0, 0.0, 0.0, 0.0);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//proj transform
+		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		if (Param.projf == PROJ_ORTHO)
+			glOrtho(Param.Left, Param.Right, Param.Bottom, Param.Top, Param.Near, Param.Far);//ortho
+		if (Param.projf == PROJ_FRUSTUM)
+			glFrustum(Param.Left, Param.Right, Param.Bottom, Param.Top, Param.Near, Param.Far);//perspective
+		//model transform
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(Param.eyex, Param.eyey, Param.eyez, Param.centerx, Param.centery, Param.centerz, Param.upx, Param.upy, Param.upz);
 		glColor3f(0.0f, 1.0f, 1.0f);
-		glOrtho(Param.Left, Param.Right, Param.Bottom, Param.Top, Param.Near, Param.Far);
 		if (save) DrawMap(save);
+		
 	}
 }
 
