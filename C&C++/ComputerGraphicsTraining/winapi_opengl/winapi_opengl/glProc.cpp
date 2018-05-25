@@ -102,7 +102,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		case CMD_EXEC_ROLLRIGHT:
 			{
 				Param.roll -= Param.drotate;
-				RollFlag = 1;
+				RollFlag = -1;
 			}
 			break;
 		case CMD_EXEC_PITCHUP:
@@ -139,14 +139,31 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 			{
 				Param.centerx = SetParam->centerx;
 				Param.centery = SetParam->centery;
+				Param.centerz = SetParam->centerz;
+				Param.eyex = SetParam->eyex;
+				Param.eyey = SetParam->eyey;
+				Param.eyez = SetParam->eyez;
+				Param.upx = SetParam->upx;
+				Param.upy = SetParam->upy;
+				Param.upz = SetParam->upz;
+				//
+				Param.Near = SetParam->Near;
+				Param.Far = SetParam->Far;
+				//
 				Param.fov = SetParam->fov;
+				//
+				Param.roll = SetParam->roll;
+				Param.pitch = SetParam->pitch;
+				Param.yaw = SetParam->yaw;
 				//
 				Param.dmove = SetParam->dmove;
 				Param.dzoom = SetParam->dzoom;
-				Param.Near = SetParam->Near;
-				Param.Far = SetParam->Far;
+				Param.drotate = SetParam->drotate;
+				//
+				Param.distance = std::sqrt(std::pow(Param.eyex - Param.centerx, 2) + std::pow(Param.eyey - Param.centery, 2) + std::pow(Param.eyez - Param.centerz, 2));
 			}
 			break;
+		/*
 		case CMD_EXEC_RESET_ALL:
 			{
 				Param.centerx = INIT_CENTERX;
@@ -175,6 +192,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 				FovFlag = 1;
 			}
 			break;
+		*/
 		case CMD_EXEC_INVERSE:
 			{
 				Param.dmove *= -1.0;
@@ -263,7 +281,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 	}
 	if (DrawFlag)
 	{
-		glClearColor(0.0, 0.0, 0.0, 0.0);
+		//glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//proj transform
 		glMatrixMode(GL_PROJECTION);
@@ -278,7 +296,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		gluLookAt(Param.eyex, Param.eyey, Param.eyez, Param.centerx, Param.centery, Param.centerz, Param.upx, Param.upy, Param.upz);
 		glColor3f(0.0f, 1.0f, 1.0f);
 		if (save) DrawMap(save);
-		
+		glutWireTeapot(0.5);
 	}
 }
 
@@ -326,6 +344,78 @@ void DrawMap(mydef::Map *MapData)
 		cur = cur->next;
 	}
 	glFlush();
+}
+
+void ParamInit(mydef::pSP Param, int InitMode)
+{
+	using namespace mydef;
+	switch (InitMode)
+	{
+	case PARAM_INIT_MAP:
+		Param->centerx = 114.0;
+		Param->centery = 34.0;
+		Param->centerz = 0.0;
+		Param->eyex = 114.0;
+		Param->eyey = 34.0;
+		Param->eyez = 16.0;
+		Param->upx = 0.0;
+		Param->upy = 1.0;
+		Param->upz = 0.0;
+		//
+		Param->Near = -100.0;
+		Param->Far = 100.0;
+		//
+		Param->fov = 0.5;
+		//
+		Param->roll = 0.5;
+		Param->pitch = 0.5;
+		Param->yaw = 0.5;
+		//
+		Param->dmove = -0.1;
+		Param->dzoom = 1.0 / 180;
+		Param->drotate = 1.0 / 180;
+		break;
+	case PARAM_INIT_TEAPOT:
+		Param->centerx = 0.0;
+		Param->centery = 0.0;
+		Param->centerz = 0.0;
+		Param->eyex = 0.0;
+		Param->eyey = 0.0;
+		Param->eyez = -1.0;
+		Param->upx = 0.0;
+		Param->upy = 1.0;
+		Param->upz = 0.0;
+		//
+		Param->Near = -100.0;
+		Param->Far = 200.0;
+		//
+		Param->fov = 0.5;
+		//
+		Param->roll = 0.5;
+		Param->pitch = 0.5;
+		Param->yaw = 0.5;
+		//
+		Param->dmove = -0.1;
+		Param->dzoom = 1.0 / 180;
+		Param->drotate = 1.0 / 180;
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+void DrawCurve(pCP CurvePoint, int PointNum, double dt)
+{
+	int level = PointNum - 1;
+	for (double t = 0.0; t <= 1.0; t += dt)
+	{
+		for (int lv = 0; lv < level; lv++)
+		{
+
+		}
+	}
 }
 
 Polygon::Polygon(int TotalPoint)

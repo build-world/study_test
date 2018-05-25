@@ -46,12 +46,14 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "&Open",                       ID_FILE_OPEN
+        MENUITEM "&Load Model",                 ID_FILE_LOADMODEL
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_EXIT
     END
     POPUP "&OpenGL"
     BEGIN
         MENUITEM "&Control",                    ID_OPENGL_CONTROL
+        MENUITEM "&Reset",                      ID_OPENGL_RESET
     END
     POPUP "&Help"
     BEGIN

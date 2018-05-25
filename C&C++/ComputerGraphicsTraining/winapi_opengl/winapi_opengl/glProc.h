@@ -24,7 +24,7 @@
 //low priority
 #define CMD_EXEC_INIT 16384
 #define CMD_EXEC_SET 32768
-#define CMD_EXEC_RESET_ALL 65536
+//#define CMD_EXEC_RESET_ALL 65536
 #define CMD_EXEC_INVERSE 131072
 
 //def cmd
@@ -36,32 +36,40 @@
 #define PROJ_ORTHO 1
 #define PROJ_FRUSTUM 2
 
+/*
 //init values
-#define INIT_CENTERX 114.0
-#define INIT_CENTERY 34.0
-#define INIT_CENTERZ 0.0
-#define INIT_EYEX 114.0
-#define INIT_EYEY 34.0
-#define INIT_EYEZ 4
+//view point value
+#define INIT_MAP_CENTERX 114.0
+#define INIT_MAP_CENTERY 34.0
+#define INIT_MAP_CENTERZ 0.0
+#define INIT_MAP_EYEX 114.0
+#define INIT_MAP_EYEY 34.0
+#define INIT_MAP_EYEZ 16.0
+#define INIT_MAP_UPX 0.0
+#define INIT_MAP_UPY 1.0
+#define INIT_MAP_UPZ 0.0
 
-#define INIT_FOV 90/180
+#define INIT_FOV 0.5 //n*PI
 #define INIT_SCALE 16.0/9
 
 
-#define INIT_NEAR 2.0
-#define INIT_FAR 6.0
+#define INIT_NEAR -100.0
+#define INIT_FAR 100.0
 
 #define INIT_ROLL 0.5 
 #define INIT_PITCH 0.5
 #define INIT_YAW 0.5
 
-#define INIT_UPX 0.0
-#define INIT_UPY 1.0
-#define INIT_UPZ 0.0
+
 
 #define INIT_DMOVE -0.1
-#define INIT_DZOOM 1.0/180
-#define INIT_DROTATE 1.0/180
+#define INIT_DZOOM 1.0/180 //n*PI
+#define INIT_DROTATE 1.0/180 //n*PI
+*/
+
+//ParamInitMode
+#define PARAM_INIT_MAP 1
+#define PARAM_INIT_TEAPOT 2
 
 
 namespace mydef
@@ -109,16 +117,22 @@ public:
 		eyex,
 		eyey,
 		eyez,
+		upx,
+		upy,
+		upz,
+		//
+		Near,
+		Far,
+		//
+		fov,
+		//
 		roll,
 		pitch,
 		yaw,
-		fov,
-		scale,
+		//
 		dmove,
 		dzoom,
-		drotate,
-		Near,
-		Far;
+		drotate;
 }SP, *pSP;
 
 typedef class SceneInnerParam :public SceneParam
@@ -129,17 +143,23 @@ public:
 		Right,
 		Bottom,
 		Top,
-		upx,
-		upy,
-		upz,
+		scale,
 		distance;
 	int projf;
 }SIP, *pSIP;
+
+typedef class CurvePoint
+{
+	double x;
+	double y;
+}CP, *pCP;
 
 extern void Init();
 extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP SetParam);
 extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
 extern void DrawPolygon(mydef::Polygon *pg);
 extern void DrawMap(mydef::Map *MapData);
+extern void DrawCurve(pCP CurvePoint, int PointNum);
+extern void ParamInit(mydef::pSP Param, int InitMode);
 
 }

@@ -33,3 +33,4 @@
 #pragma comment (lib, "opengl32.lib")  /* link with Microsoft OpenGL lib */
 #pragma comment (lib, "glu32.lib")     /* link with OpenGL Utility lib */
 
+#include <glut.h>

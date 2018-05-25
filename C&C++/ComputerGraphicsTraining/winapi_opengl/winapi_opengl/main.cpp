@@ -186,7 +186,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			mydef::GlobalVarHDC(&hdc);
 			//SetTimer(hWnd, 33, 1, NULL);
 			//mydef::Init();
-			mydef::SceneProc(CMD_EXEC_INIT | CMD_EXEC_RESET_ALL | CMD_DEF_ORTHO, NULL, NULL, NULL, NULL);
+			mydef::pSP temp = new mydef::SP;
+			mydef::ParamInit(temp, PARAM_INIT_TEAPOT);
+			mydef::SceneProc(CMD_EXEC_INIT | CMD_EXEC_SET | CMD_DEF_ORTHO, NULL, NULL, NULL, temp);
+			delete temp;
 		}
 		break;
 	case WM_SIZE:
@@ -248,6 +251,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 	static mydef::SP Param;
 	ZeroMemory(&Param, sizeof(mydef::SP));
 	switch (message)
@@ -259,14 +263,12 @@ BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 			case IDC_BUTTON1:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 					mydef::SceneProc(CMD_EXEC_ZOOMIN, NULL, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON2:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 					mydef::SceneProc(CMD_EXEC_ZOOMOUT, NULL, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
@@ -301,33 +303,29 @@ BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			case IDC_BUTTON4:
 				{
-					mydef::SceneProc(CMD_EXEC_RESET_ALL, NULL, NULL, NULL, NULL);
+					//mydef::SceneProc(CMD_EXEC_RESET_ALL, NULL, NULL, NULL, NULL);
 				}
 				break;
 			case IDC_BUTTON5:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 					mydef::SceneProc(CMD_EXEC_UP, NULL, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON6:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 					mydef::SceneProc(CMD_EXEC_DOWN, NULL, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON7:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 					mydef::SceneProc(CMD_EXEC_LEFT, NULL, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON8:
 				{
-					HDC *phdc = (HDC*)mydef::GlobalVarHDC(NULL);
 					mydef::SceneProc(CMD_EXEC_RIGHT, NULL, NULL, NULL, NULL);
 					SwapBuffers(*phdc);
 				}
@@ -344,42 +342,50 @@ BOOL CALLBACK CtrlDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			case IDC_BUTTON11:
 				{
-					
+					mydef::SceneProc(CMD_DEF_ORTHO, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON12:
 				{
-					
+					mydef::SceneProc(CMD_DEF_FRUSTUM, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON13:
 				{
 					mydef::SceneProc(CMD_EXEC_ROLLLEFT, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON14:
 				{
 					mydef::SceneProc(CMD_EXEC_ROLLRIGHT, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON15:
 				{
 					mydef::SceneProc(CMD_EXEC_PITCHUP, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON16:
 				{
 					mydef::SceneProc(CMD_EXEC_PITCHDOWN, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON17:
 				{
 					mydef::SceneProc(CMD_EXEC_YAWLEFT, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			case IDC_BUTTON18:
 				{
 					mydef::SceneProc(CMD_EXEC_YAWRIGHT, NULL, NULL, NULL, NULL);
+					SwapBuffers(*phdc);
 				}
 				break;
 			default:
