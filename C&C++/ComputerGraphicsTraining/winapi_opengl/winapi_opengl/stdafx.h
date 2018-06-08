@@ -30,7 +30,9 @@
 #include <cstdlib>
 
 //Linker lib dependence
-#pragma comment (lib, "opengl32.lib")  /* link with Microsoft OpenGL lib */
-#pragma comment (lib, "glu32.lib")     /* link with OpenGL Utility lib */
+//#pragma comment (lib, "opengl32.lib")  /* link with Microsoft OpenGL lib */
+//#pragma comment (lib, "glu32.lib")     /* link with OpenGL Utility lib */
 
 #include <glut.h>
+#pragma comment (lib, "glut32.lib")
+#pragma comment (lib, "glut.lib")

@@ -296,7 +296,21 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		gluLookAt(Param.eyex, Param.eyey, Param.eyez, Param.centerx, Param.centery, Param.centerz, Param.upx, Param.upy, Param.upz);
 		glColor3f(0.0f, 1.0f, 1.0f);
 		if (save) DrawMap(save);
-		glutWireTeapot(0.5);
+		//glutWireTeapot(0.5);
+		pCP CurvePoint = (pCP)calloc(6, sizeof(CP));
+		CurvePoint->x = 0.0;
+		CurvePoint->y = 0.0;
+		(CurvePoint + 1)->x = 1.0;
+		(CurvePoint + 1)->y = 4.0;
+		(CurvePoint + 2)->x = 2.0;
+		(CurvePoint + 2)->y = 1.0;
+		(CurvePoint + 3)->x = 3.0;
+		(CurvePoint + 3)->y = 3.0;
+		(CurvePoint + 4)->x = 4.0;
+		(CurvePoint + 4)->y = 2.0;
+		(CurvePoint + 5)->x = 3.0;
+		(CurvePoint + 5)->y = 1.0;
+		BezierCurve0(CurvePoint, 6, 1e-4);
 	}
 }
 
@@ -405,17 +419,40 @@ void ParamInit(mydef::pSP Param, int InitMode)
 }
 
 
-
-void DrawCurve(pCP CurvePoint, int PointNum, double dt)
+void BezierCurve0(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
 {
-	int level = PointNum - 1;
+	unsigned int level = PointNum - 1;
+	glBegin(GL_LINE_STRIP);
 	for (double t = 0.0; t <= 1.0; t += dt)
 	{
-		for (int lv = 0; lv < level; lv++)
+		pCP prev = CtrlPoint;
+		pCP next = NULL;
+		for (unsigned int lv = level; lv > 0; lv--)
 		{
-
+			//calc points location of next level
+			next = (pCP)calloc(lv, sizeof(CP));
+			for (unsigned int ctr = 0; ctr < lv; ctr++)
+			{
+				//Locate a Point from a Line
+				double x0 = (prev + ctr)->x;
+				double y0 = (prev + ctr)->y;
+				double x1 = (prev + ctr + 1)->x;
+				double y1 = (prev + ctr + 1)->y;
+				(next + ctr)->x = x0 + (x1 - x0) * t;
+				(next + ctr)->y = y0 + (y1 - y0) * t;
+			}
+			if (lv != level)
+				free(prev);
+			prev = next;
+			next = NULL;
 		}
+		//lv = 0, prev as result of a dt iteration
+		glVertex3f(prev->x, prev->y, 0.0);
+		free(prev);
+		prev = NULL;
 	}
+	glEnd();
+	glFlush();
 }
 
 Polygon::Polygon(int TotalPoint)
