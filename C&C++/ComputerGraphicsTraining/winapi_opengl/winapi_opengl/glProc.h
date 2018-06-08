@@ -159,6 +159,7 @@ extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef
 extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
 extern void DrawPolygon(mydef::Polygon *pg);
 extern void DrawMap(mydef::Map *MapData);
+extern void BezierCurve(mydef::pCP CtrlPoint, unsigned int PointNum, double dt);
 extern void BezierCurve0(mydef::pCP CtrlPoint, unsigned int PointNum, double dt);
 extern void ParamInit(mydef::pSP Param, int InitMode);
 

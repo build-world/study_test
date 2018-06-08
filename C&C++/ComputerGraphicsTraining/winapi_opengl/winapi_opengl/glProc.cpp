@@ -310,7 +310,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		(CurvePoint + 4)->y = 2.0;
 		(CurvePoint + 5)->x = 3.0;
 		(CurvePoint + 5)->y = 1.0;
-		BezierCurve0(CurvePoint, 6, 1e-4);
+		BezierCurve(CurvePoint, 6, 1e-4);
 	}
 }
 
@@ -418,6 +418,38 @@ void ParamInit(mydef::pSP Param, int InitMode)
 	}
 }
 
+void BezierCurve(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
+{
+	glBegin(GL_LINE_STRIP);
+	//
+	using namespace std;
+	unsigned int level = PointNum - 1;
+	pCP buffer = (pCP)calloc(PointNum, sizeof(CP));
+	for (double t = 0.0; t <= 1.0; t += dt)
+	{
+		memcpy(buffer, CtrlPoint, sizeof(CP) * PointNum);
+		for (unsigned int lv = level; lv > 0; lv--)
+		{
+			//calc points location of next level
+			for (unsigned int ctr = 0; ctr < lv; ctr++)
+			{
+				//Locate a Point from a Line
+				double x0 = (buffer + ctr)->x;
+				double y0 = (buffer + ctr)->y;
+				double x1 = (buffer + ctr + 1)->x;
+				double y1 = (buffer + ctr + 1)->y;
+				(buffer + ctr)->x = x0 + (x1 - x0) * t;
+				(buffer + ctr)->y = y0 + (y1 - y0) * t;
+			}
+		}
+		//lv = 0, prev as result of a dt iteration
+		glVertex3f(buffer->x, buffer->y, 0.0);
+	}
+	free(buffer);
+	//
+	glEnd();
+	glFlush();
+}
 
 void BezierCurve0(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
 {
