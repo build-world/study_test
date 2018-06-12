@@ -154,13 +154,22 @@ typedef struct CurvePoint
 	double y;
 }CP, *pCP;
 
+typedef struct CurvePoint3D
+{
+	double x;
+	double y;
+	double z;
+}CP3D, *pCP3D;
+
 extern void Init();
 extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP SetParam);
 extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
 extern void DrawPolygon(mydef::Polygon *pg);
 extern void DrawMap(mydef::Map *MapData);
-extern void BezierCurve(mydef::pCP CtrlPoint, unsigned int PointNum, double dt);
+extern void BezierCurve2D(mydef::pCP CtrlPoint, unsigned int PointNum, double dt);
 extern void BezierCurve0(mydef::pCP CtrlPoint, unsigned int PointNum, double dt);
+extern void BezierCurve3D(mydef::pCP3D CtrlPoint, unsigned int cp_off, unsigned int PointNum, mydef::pCP3D SamplePoint, unsigned int sp_off, double dt);
+extern void BezierSurf(mydef::pCP3D CtrlPoint, unsigned int cp_row, unsigned int cp_column, unsigned int scale_row, unsigned int scale_column);
 extern void ParamInit(mydef::pSP Param, int InitMode);
 
 }

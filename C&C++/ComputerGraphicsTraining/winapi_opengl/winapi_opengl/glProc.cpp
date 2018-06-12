@@ -310,7 +310,13 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		(CurvePoint + 4)->y = 2.0;
 		(CurvePoint + 5)->x = 3.0;
 		(CurvePoint + 5)->y = 1.0;
-		BezierCurve(CurvePoint, 6, 1e-4);
+		BezierCurve2D(CurvePoint, 6, 1e-4);
+		CP3D cp3d[9] = {
+		{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 },
+		{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 },
+		{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 },
+		};
+		BezierSurf(cp3d, 3, 3, 100, 100);
 	}
 }
 
@@ -418,11 +424,11 @@ void ParamInit(mydef::pSP Param, int InitMode)
 	}
 }
 
-void BezierCurve(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
+void BezierCurve2D(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
 {
 	glBegin(GL_LINE_STRIP);
 	//
-	using namespace std;
+	using namespace mydef;
 	unsigned int level = PointNum - 1;
 	pCP buffer = (pCP)calloc(PointNum, sizeof(CP));
 	for (double t = 0.0; t <= 1.0; t += dt)
@@ -453,6 +459,7 @@ void BezierCurve(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
 
 void BezierCurve0(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
 {
+	using namespace mydef;
 	unsigned int level = PointNum - 1;
 	glBegin(GL_LINE_STRIP);
 	for (double t = 0.0; t <= 1.0; t += dt)
@@ -485,6 +492,119 @@ void BezierCurve0(mydef::pCP CtrlPoint, unsigned int PointNum, double dt)
 	}
 	glEnd();
 	glFlush();
+}
+
+void BezierCurve3D(mydef::pCP3D CtrlPoint, unsigned int cp_off, unsigned int PointNum, mydef::pCP3D SamplePoint, unsigned int sp_off, double dt)
+{
+	using namespace mydef;
+	unsigned int level = PointNum - 1;
+	pCP3D buffer = (pCP3D)calloc(PointNum, sizeof(CP3D));
+	pCP3D buffer_cur;
+	pCP3D cp_cur;
+	pCP3D addr0;
+	pCP3D addr1;
+	pCP3D ret_addr = SamplePoint;
+	for (double t = 0.0; t <= 1.0; t += dt, ret_addr += sp_off)
+	{
+		//Copy CtrlPoint to buffer, reset buffer
+		buffer_cur = buffer;
+		cp_cur = CtrlPoint;
+		for (int ctr = 0; ctr < PointNum; ctr++, buffer_cur++, cp_cur += cp_off)
+			memcpy(buffer_cur, cp_cur, sizeof(CP3D));
+		//Calc SamplePoint per dt
+		for (unsigned int lv = level; lv > 0; lv--)
+		{
+			//calc points location of next level
+			addr0 = buffer;
+			addr1 = addr0 + cp_off;
+			for (unsigned int ctr = 0; ctr < lv; ctr++, addr0 += cp_off, addr1 += cp_off)
+			{
+				//Locate a Point from a Line
+				double x0 = addr0->x;
+				double y0 = addr0->y;
+				double z0 = addr0->z;
+				double x1 = addr1->x;
+				double y1 = addr1->y;
+				double z1 = addr1->z;
+				addr0->x = x0 + (x1 - x0) * t;
+				addr0->y = y0 + (y1 - y0) * t;
+				addr0->z = z0 + (z1 - z0) * t;
+			}
+		}
+		//lv = 0, prev as result of a dt iteration
+		ret_addr->x = buffer->x;
+		ret_addr->y = buffer->y;
+		ret_addr->z = buffer->z;
+	}
+	free(buffer);
+}
+
+void BezierSurf(mydef::pCP3D CtrlPoint, unsigned int cp_row, unsigned int cp_column, unsigned int scale_row, unsigned int scale_column)
+{
+	using namespace mydef;
+	unsigned int sp_row = cp_row * scale_row;
+	unsigned int sp_column = cp_column * scale_column;
+	double dt_row = 1.0 / (sp_row - 1);
+	double dt_column = 1.0 / (sp_column - 1);
+	pCP3D surf = (pCP3D)calloc(sp_row * sp_column, sizeof(CP3D));
+	pCP3D buffer, addr0, addr1, addr_ret, cur, base;
+	//Calc
+	//row
+	buffer = (pCP3D)calloc(cp_column, sizeof(CP3D));
+	for (int ctr = 0; ctr < sp_row; ctr++)
+	{
+		double phase = (double)ctr / sp_row * cp_row;
+		double floor = std::floor(phase);
+		double ceil = std::ceil(phase);
+		int prev = (int)floor;
+		int next = (int)ceil;
+		phase -= floor;
+		//Calc buffer array
+		addr0 = CtrlPoint + prev * cp_column;
+		addr1 = CtrlPoint + next * cp_column;
+		addr_ret = buffer;
+		for (int ctr0 = 0; ctr0 < cp_column; ctr0++, addr0++, addr1++, addr_ret++)
+		{
+			double x0 = addr0->x;
+			double y0 = addr0->y;
+			double z0 = addr0->z;
+			double x1 = addr1->x;
+			double y1 = addr1->y;
+			double z1 = addr1->z;
+			addr_ret->x = x0 + (x1 - x0) * phase;
+			addr_ret->y = y0 + (y1 - y0) * phase;
+			addr_ret->z = z0 + (z1 - z0) * phase;
+		}
+		BezierCurve3D(buffer, 1, cp_column, surf + ctr, 1, dt_column);
+	}
+	free(buffer);
+	//column
+		
+
+	//Draw
+	//row
+	cur = surf;
+	for (int ctr0 = 0; ctr0 < sp_row; ctr0++)
+	{
+		glBegin(GL_LINE_STRIP);
+		for (int ctr1 = 0; ctr1 < sp_column; ctr1++, cur++)
+			glVertex3f(cur->x, cur->y, cur->z);
+		glEnd();
+		glFlush();
+	}
+	//column
+	base = surf;
+	for (int ctr0 = 0; ctr0 < sp_column; ctr0++, base++)
+	{
+		cur = base;
+		glBegin(GL_LINE_STRIP);
+		for (int ctr1 = 0; ctr1 < sp_row; ctr1++, cur += sp_column)
+			glVertex3f(cur->x, cur->y, cur->z);
+		glEnd();
+		glFlush();
+	}
+	//free
+	free(surf);
 }
 
 Polygon::Polygon(int TotalPoint)
