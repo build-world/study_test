@@ -312,12 +312,39 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		(CurvePoint + 5)->y = 1.0;
 		BezierCurve2D(CurvePoint, 6, 1e-4);
 		CP3D cp3d[9] = {
-		{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 },
-		{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 },
-		{ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 },
+		{ -1.0, 0.0, -1.0 }, { 0.0, 0.0, -1.0 }, { 1.0, 0.0, -1.0 },
+		{ -1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0 },
+		{ -1.0, 0.0, 1.0 }, { 0.0, 0.0, 1.0 }, { 1.0, 0.0, 1.0 },
 		};
-		BezierSurf(cp3d, 3, 3, 100, 100);
+		BezierSurf(cp3d, 3, 3, 10, 10);
+		//pCP3D bzp = (pCP3D)calloc(11, sizeof(CP3D));
+		//BezierCurve3D(cp3d + 3, 1, 3, bzp, 1, 0.1);
+		//glBegin(GL_LINE_STRIP);
+		//for (int ctr = 0; ctr < 11; ctr++)
+		//{
+		//	pCP3D a = bzp + ctr;
+		//	glVertex3f(a->x, a->y, a->z);
+		//}
+		//glEnd();
+		//glFlush();
+		DrawAxis(1.0);
 	}
+}
+
+void DrawAxis(double r)
+{
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(-r, 0.0, 0.0);
+	glVertex3f(r, 0.0, 0.0);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, -r, 0.0);
+	glVertex3f(0.0, r, 0.0);
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(0.0, 0.0, -r);
+	glVertex3f(0.0, 0.0, r);
+	glEnd();
+	glFlush();
 }
 
 void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample)
@@ -575,11 +602,10 @@ void BezierSurf(mydef::pCP3D CtrlPoint, unsigned int cp_row, unsigned int cp_col
 			addr_ret->y = y0 + (y1 - y0) * phase;
 			addr_ret->z = z0 + (z1 - z0) * phase;
 		}
-		BezierCurve3D(buffer, 1, cp_column, surf + ctr, 1, dt_column);
+		BezierCurve3D(buffer, 1, cp_column, surf + ctr * sp_column, 1, dt_column);
 	}
 	free(buffer);
 	//column
-		
 
 	//Draw
 	//row

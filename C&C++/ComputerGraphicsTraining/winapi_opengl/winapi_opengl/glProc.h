@@ -163,6 +163,7 @@ typedef struct CurvePoint3D
 
 extern void Init();
 extern void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP SetParam);
+extern void DrawAxis(double r);
 extern void DrawCircle(GLenum mode, GLfloat x, GLfloat y, GLfloat r, int TotalSample);
 extern void DrawPolygon(mydef::Polygon *pg);
 extern void DrawMap(mydef::Map *MapData);
