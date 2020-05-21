@@ -1,0 +1,5 @@
+(defun c:helloworld ( / res)
+  (setq res (strcat "\nHello World " (getstring "\nenter a string: ") "!"))
+  (prompt res)
+  (alert res)
+)

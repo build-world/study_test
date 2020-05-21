@@ -257,3 +257,6 @@ bin/
 
 #Python
 *.pyc
+
+#Visual Studio Code
+.vscode/
