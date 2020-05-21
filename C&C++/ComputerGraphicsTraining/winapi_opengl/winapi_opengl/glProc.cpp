@@ -50,6 +50,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 					Param.scale = width * 1.0 / height;
 				glViewport(0, 0, width, height);
 				FovFlag = 1;
+				//DrawFlag = 1;
 			}
 			break;
 		case CMD_EXEC_DISP:
@@ -316,7 +317,7 @@ void SceneProc(int cmd, int width, int height, mydef::Map *MapData, mydef::pSP S
 		{ -1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0 },
 		{ -1.0, 0.0, 1.0 }, { 0.0, 0.0, 1.0 }, { 1.0, 0.0, 1.0 },
 		};
-		BezierSurf(cp3d, 3, 3, 10, 10);
+		BezierSurf(cp3d, 3, 3, 20, 20);
 		//pCP3D bzp = (pCP3D)calloc(11, sizeof(CP3D));
 		//BezierCurve3D(cp3d + 3, 1, 3, bzp, 1, 0.1);
 		//glBegin(GL_LINE_STRIP);
